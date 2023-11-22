@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  itlinkwave-db:
+    image: postgres:14
+    container_name: itlinkwave-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: itlinkwave
+      POSTGRES_PASSWORD: ndquang@2002
+      POSTGRES_DB: itlinkwave
+    ports:
+      - "5005:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - itlinkwave-network
+    
+  itlinkwave-keycloak:
+    image: bitnami/keycloak:21
+    depends_on:
+      - keycloak-db
+    container_name: itlinkwave-keycloak
+    environment:
+      PROXY_ADDRESS_FORWARDING: "true"
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: itlinkwave
+      DB_PASSWORD: ndquang@2002
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./realm-export.json:/opt/bitnami/keycloak/data/import/realm-export.json
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+    networks:
+      - itlinkwave-network
+
+  keycloak-db:
+    image: postgres:14
+    container_name: keycloak-db
+    restart: unless-stopped
+    ports:
+      - "5006:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: itlinkwave
+      POSTGRES_PASSWORD: ndquang@2002
+    networks:
+      - itlinkwave-network
+
+volumes:
+  postgres_data:
+
+networks:
+  itlinkwave-network:
+    driver: bridge

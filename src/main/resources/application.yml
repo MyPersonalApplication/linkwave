@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5005/itlinkwave
+    username: itlinkwave
+    password: ndquang@2002
+  flyway:
+    locations:
+      - classpath:db/migration/schema
+      - classpath:db/migration/data
+    clean-on-validation-error: true
+  jpa:
+    generate-ddl: off
+    hibernate.ddl-auto: none
+    hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc.batch_size: 20
+        order_inserts: true
+        order_updates: true
+        format_sql: true
+        show_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/itlinkwave
+          jwk-set-uri: http://localhost:8081/realms/itlinkwave/protocol/openid-connect/certs
+  data.rest.base-path: /api
+
+server:
+  port: 8080
+
+jwt:
+  auth:
+    converter:
+      principle-attribute: preferred_username
+
+keycloak:
+    url: http://localhost:8081
+    realm: master
+    master-client-id: admin-cli #for master realm
+    client-id: document-client
+    username: admin
+    password: admin
+    roles: SUPER_ADMIN, ADMIN, USER
+    defaultRole: USER
+    token-life-span: 72000
