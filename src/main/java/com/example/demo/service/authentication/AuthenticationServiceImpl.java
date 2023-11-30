@@ -5,10 +5,12 @@ import com.example.demo.controller.exception.ConflictingDataException;
 import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.enums.ERole;
 import com.example.demo.enums.ErrorMessage;
-import com.example.demo.model.User;
+import com.example.demo.model.user.User;
 import com.example.demo.service.keycloak.KeycloakService;
 import com.example.demo.service.user.UserService;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
@@ -16,13 +18,13 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
 import java.util.*;
 
 @Service
@@ -31,15 +33,13 @@ import java.util.*;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final KeycloakService keycloakService;
     private final UserService userService;
-    private final String realmName = "itlinkwave";
+    private final String realmName = "linkwave";
 
     @Override
     public AuthenticationResponse authenticate(String username, String password) throws AccessDeniedException {
         try {
-            AuthenticationResponse responseDTO = new AuthenticationResponse();
             Keycloak newKeycloak = keycloakService.newKeycloakBuilderWithPasswordCredentials(username, password, realmName).build();
-
-            responseDTO.setAccessTokenResponse(newKeycloak.tokenManager().getAccessToken());
+            AccessTokenResponse accessTokenResponse = newKeycloak.tokenManager().getAccessToken();
 
             UsersResource usersResource = keycloakService.getRealmResource(realmName).users();
             Optional<UserRepresentation> userRepresentation = usersResource.search(username).stream().findFirst();
@@ -49,9 +49,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             UserResource userResource = usersResource.get(userRepresentation.get().getId());
             List<String> roles = userResource.roles().realmLevel().listEffective().stream()
                     .map(RoleRepresentation::getName).map(role -> "ROLE_" + role).toList();
-            responseDTO.setRoles(roles);
 
-            return responseDTO;
+            return new AuthenticationResponse(accessTokenResponse, roles);
         } catch (AccessDeniedException ex){
             throw ex;
         } catch (Exception ex) {
@@ -72,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Response response = realmResource.users().create(user);
             if (response.getStatus() == 201) {
                 String userId = CreatedResponseUtil.getCreatedId(response);
-                RoleRepresentation userRole = realmResource.roles().get("USER").toRepresentation();
+                RoleRepresentation userRole = realmResource.roles().get(String.valueOf(ERole.USER)).toRepresentation();
                 realmResource.users().get(userId).roles().realmLevel().add(Collections.singletonList(userRole));
 
                 try {
@@ -80,7 +79,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .id(UUID.fromString(userId))
                             .email(registerDTO.getEmail())
                             .isActive(true)
-                            .createdOn(new Date())
                             .build();
 
                     userService.save(userEntity);

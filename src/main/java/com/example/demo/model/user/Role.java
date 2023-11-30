@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,6 +18,7 @@ public class Role {
     @Id
     @GeneratedValue
     private UUID id;
+
     @Column
     private String name;
 }

@@ -1,7 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.config.authentication.AccessTokenHandler;
-import com.example.demo.model.User;
+import com.example.demo.model.user.User;
 import com.example.demo.service.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +10,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.NotAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.ws.rs.NotAuthorizedException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;

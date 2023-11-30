@@ -1,20 +1,20 @@
 version: '3'
 
 services:
-  itlinkwave-db:
+  linkwave-db:
     image: postgres:14
-    container_name: itlinkwave-db
+    container_name: linkwave-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: itlinkwave
+      POSTGRES_USER: linkwave
       POSTGRES_PASSWORD: ndquang@2002
-      POSTGRES_DB: itlinkwave
+      POSTGRES_DB: linkwave
     ports:
       - "5005:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - itlinkwave-network
+      - linkwave-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -26,19 +26,19 @@ services:
     ports:
       - "5050:80"
     networks:
-      - itlinkwave-network
+      - linkwave-network
 
-  itlinkwave-keycloak:
+  linkwave-keycloak:
     image: bitnami/keycloak:21
     depends_on:
       - keycloak-db
-    container_name: itlinkwave-keycloak
+    container_name: linkwave-keycloak
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: postgres
       DB_ADDR: keycloak-db
       DB_DATABASE: keycloak
-      DB_USER: itlinkwave
+      DB_USER: linkwave
       DB_PASSWORD: ndquang@2002
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -48,7 +48,7 @@ services:
       - "8081:8080"
     restart: unless-stopped
     networks:
-      - itlinkwave-network
+      - linkwave-network
 
   keycloak-db:
     image: postgres:14
@@ -58,14 +58,14 @@ services:
       - "5006:5432"
     environment:
       POSTGRES_DB: keycloak
-      POSTGRES_USER: itlinkwave
+      POSTGRES_USER: linkwave
       POSTGRES_PASSWORD: ndquang@2002
     networks:
-      - itlinkwave-network
+      - linkwave-network
 
 volumes:
   postgres_data:
 
 networks:
-  itlinkwave-network:
+  linkwave-network:
     driver: bridge

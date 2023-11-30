@@ -1,18 +1,16 @@
 package com.example.demo.service.user;
 
 import com.example.demo.enums.ErrorMessage;
-import com.example.demo.model.Role;
-import com.example.demo.model.User;
+import com.example.demo.model.user.Role;
+import com.example.demo.model.user.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.NotFoundException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

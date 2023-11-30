@@ -2,8 +2,6 @@ package com.example.demo.service.keycloak;
 
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.dto.user.UserDTO;
-import com.example.demo.enums.ErrorMessage;
-import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
@@ -13,7 +11,6 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
