@@ -3,6 +3,9 @@ package com.example.demo.model.user;
 import com.example.demo.model.album.AlbumMedia;
 import com.example.demo.model.BaseModel;
 import com.example.demo.model.Notification;
+import com.example.demo.model.chat.Message;
+import com.example.demo.model.chat.Participant;
+import com.example.demo.model.chat.Receipt;
 import com.example.demo.model.friend.FriendRequest;
 import com.example.demo.model.friend.Friendship;
 import jakarta.persistence.*;
@@ -31,7 +34,7 @@ public class User extends BaseModel {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
@@ -66,4 +69,13 @@ public class User extends BaseModel {
 
     @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL)
     private Set<Friendship> friendOfFriendships;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private Set<Message> messages;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Participant> participants;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Receipt> receipts;
 }

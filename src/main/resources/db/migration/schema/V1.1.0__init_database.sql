@@ -189,11 +189,14 @@ CREATE TABLE IF NOT EXISTS receipts
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS messages_attachments
+CREATE TABLE IF NOT EXISTS message_attachments
 (
     id         UUID         PRIMARY KEY,
     message_id UUID         NOT NULL,
-    file_url   VARCHAR(255) NOT NULL,
+    file_url   TEXT         NOT NULL,
+    file_name  VARCHAR(255) NOT NULL,
+    file_type  VARCHAR(255) NOT NULL,
+    file_size  BIGINT       NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
     created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
