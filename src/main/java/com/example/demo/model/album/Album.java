@@ -1,6 +1,7 @@
 package com.example.demo.model.album;
 
 import com.example.demo.model.BaseModel;
+import com.example.demo.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,10 +26,19 @@ public class Album extends BaseModel {
     @GeneratedValue
     private UUID id;
 
+    @Column
     private String name;
 
+    @Column
     private String description;
 
+    @Column(name = "is_public")
+    private Boolean isPublic;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
-    private Set<AlbumMedia> albumMedias;
+    private Set<AlbumMedia> albumMedia;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.model.user;
 
+import com.example.demo.model.album.Album;
 import com.example.demo.model.album.AlbumMedia;
 import com.example.demo.model.BaseModel;
 import com.example.demo.model.Notification;
@@ -8,6 +9,10 @@ import com.example.demo.model.chat.Participant;
 import com.example.demo.model.chat.Receipt;
 import com.example.demo.model.friend.FriendRequest;
 import com.example.demo.model.friend.Friendship;
+import com.example.demo.model.interact.LikeComment;
+import com.example.demo.model.interact.Post;
+import com.example.demo.model.interact.PostComment;
+import com.example.demo.model.interact.ReplyComment;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -58,6 +63,9 @@ public class User extends BaseModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Notification> notifications;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Album> albums;
+
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private Set<FriendRequest> sentFriendRequests;
 
@@ -78,4 +86,16 @@ public class User extends BaseModel {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Receipt> receipts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<PostComment> postComments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<ReplyComment> replyComments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<LikeComment> likeComments;
 }

@@ -97,16 +97,18 @@ CREATE TABLE IF NOT EXISTS notifications
 CREATE TABLE IF NOT EXISTS albums
 (
     id         UUID         PRIMARY KEY,
+    user_id    UUID         NOT NULL,
     name       VARCHAR(255) NOT NULL,
+    is_public  BOOLEAN      NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
     created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS album_images
+CREATE TABLE IF NOT EXISTS album_media
 (
     id          UUID         PRIMARY KEY,
-    user_id     UUID         NOT NULL,
     album_id    UUID         NOT NULL,
     caption     TEXT,
     url         TEXT         NOT NULL,
@@ -114,7 +116,6 @@ CREATE TABLE IF NOT EXISTS album_images
     archived    BOOLEAN      NOT NULL    DEFAULT false,
     created_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (album_id) REFERENCES albums (id)
 );
 
@@ -207,18 +208,19 @@ CREATE TABLE IF NOT EXISTS posts
 (
     id         UUID         PRIMARY KEY,
     user_id    UUID         NOT NULL,
-    content    TEXT         NOT NULL,
+    content    TEXT,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
     created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS post_medias
+CREATE TABLE IF NOT EXISTS post_media
 (
     id         UUID         PRIMARY KEY,
     post_id    UUID         NOT NULL,
     url        VARCHAR(255) NOT NULL,
+    caption    TEXT,
     is_video   BOOLEAN      NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
     created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
@@ -251,7 +253,7 @@ CREATE TABLE IF NOT EXISTS post_comments
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS post_comment_replies
+CREATE TABLE IF NOT EXISTS reply_comments
 (
     id         UUID         PRIMARY KEY,
     comment_id UUID         NOT NULL,
@@ -264,16 +266,16 @@ CREATE TABLE IF NOT EXISTS post_comment_replies
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS post_comment_likes
+CREATE TABLE IF NOT EXISTS like_comments
 (
     id                  UUID         PRIMARY KEY,
-    comment_id          UUID         NOT NULL,
-    comment_reply_id    UUID         NOT NULL,
+    post_comment_id     UUID,
+    reply_comment_id    UUID,
     user_id             UUID         NOT NULL,
     archived            BOOLEAN      NOT NULL   DEFAULT false,
     created_at          TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
     updated_at          TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (comment_id) REFERENCES post_comments (id),
-    FOREIGN KEY (comment_reply_id) REFERENCES post_comment_replies (id),
+    FOREIGN KEY (post_comment_id) REFERENCES post_comments (id),
+    FOREIGN KEY (reply_comment_id) REFERENCES reply_comments (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
-    );
+);

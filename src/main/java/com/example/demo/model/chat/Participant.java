@@ -26,8 +26,8 @@ public class Participant extends BaseModel {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "message_id", nullable = false)
-    private Message message;
+    @JoinColumn(name = "conversation_id", nullable = false)
+    private Conversation conversation;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

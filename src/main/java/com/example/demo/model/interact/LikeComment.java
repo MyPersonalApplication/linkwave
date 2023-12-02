@@ -1,6 +1,7 @@
-package com.example.demo.model.chat;
+package com.example.demo.model.interact;
 
 import com.example.demo.model.BaseModel;
+import com.example.demo.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
-import java.util.Set;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,19 +18,22 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "conversations")
+@Table(name = "like_comments")
 @Where(clause = "archived = false")
-public class Conversation extends BaseModel {
+public class LikeComment extends BaseModel {
     @Id
     @GeneratedValue
     private UUID id;
 
-    @Column
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "post_comment_id")
+    private PostComment postComment;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Message> messages;
+    @ManyToOne
+    @JoinColumn(name = "reply_comment_id")
+    private ReplyComment replyComment;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Participant> participants;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

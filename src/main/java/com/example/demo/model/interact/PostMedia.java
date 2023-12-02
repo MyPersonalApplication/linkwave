@@ -1,4 +1,4 @@
-package com.example.demo.model.chat;
+package com.example.demo.model.interact;
 
 import com.example.demo.model.BaseModel;
 import jakarta.persistence.*;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
-import java.util.Set;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,19 +17,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "conversations")
+@Table(name = "post_media")
 @Where(clause = "archived = false")
-public class Conversation extends BaseModel {
+public class PostMedia extends BaseModel {
     @Id
     @GeneratedValue
     private UUID id;
 
     @Column
-    private String name;
+    private String url;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Message> messages;
+    @Column
+    private String caption;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Participant> participants;
+    @Column(name = "is_video")
+    private Boolean isVideo;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 }
