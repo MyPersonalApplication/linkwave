@@ -5,9 +5,9 @@ import com.example.demo.controller.exception.ConflictingDataException;
 import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
 import com.example.demo.dto.user.UserDTO;
-import com.example.demo.enums.ERole;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.model.user.User;
+import com.example.demo.model.user.UserProfile;
 import com.example.demo.service.keycloak.KeycloakService;
 import com.example.demo.service.user.UserService;
 import jakarta.ws.rs.core.Response;
@@ -71,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Response response = realmResource.users().create(user);
             if (response.getStatus() == 201) {
                 String userId = CreatedResponseUtil.getCreatedId(response);
-                RoleRepresentation userRole = realmResource.roles().get(String.valueOf(ERole.USER)).toRepresentation();
+                RoleRepresentation userRole = realmResource.roles().get("USER").toRepresentation();
                 realmResource.users().get(userId).roles().realmLevel().add(Collections.singletonList(userRole));
 
                 try {
@@ -79,7 +79,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .id(UUID.fromString(userId))
                             .email(registerDTO.getEmail())
                             .isActive(true)
+                            .userProfile(UserProfile.builder().build())
+                            .userSkills(Collections.emptyList())
+                            .userExperiences(Collections.emptyList())
+                            .userActivities(Collections.emptyList())
+                            .targetUserActivities(Collections.emptyList())
+                            .sentNotifications(Collections.emptyList())
+                            .receivedNotifications(Collections.emptyList())
+                            .albums(Collections.emptyList())
+                            .sentFriendRequests(Collections.emptyList())
+                            .receivedFriendRequests(Collections.emptyList())
+                            .friendships(Collections.emptyList())
+                            .friendOfFriendships(Collections.emptyList())
+                            .messages(Collections.emptyList())
+                            .participants(Collections.emptyList())
+                            .receipts(Collections.emptyList())
+                            .posts(Collections.emptyList())
+                            .postComments(Collections.emptyList())
+                            .replyComments(Collections.emptyList())
+                            .likeComments(Collections.emptyList())
                             .build();
+
+                    UserProfile userProfile = UserProfile.builder()
+                            .user(userEntity)
+                            .build();
+
+                    userEntity.setUserProfile(userProfile);
 
                     userService.save(userEntity);
                     return "User registered successfully!";

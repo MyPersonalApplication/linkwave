@@ -27,7 +27,7 @@ public class UserSkill extends BaseModel {
     @Column(name = "certification_name")
     private String certificationName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

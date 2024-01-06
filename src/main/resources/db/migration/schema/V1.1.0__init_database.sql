@@ -1,9 +1,3 @@
-CREATE TABLE IF NOT EXISTS roles
-(
-    id   UUID PRIMARY KEY,
-    name VARCHAR(255)
-);
-
 CREATE TABLE IF NOT EXISTS users
 (
     id         UUID         PRIMARY KEY,
@@ -14,18 +8,9 @@ CREATE TABLE IF NOT EXISTS users
     updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS user_roles
-(
-    user_id UUID,
-    role_id UUID,
-    PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (role_id) REFERENCES roles (id)
-);
-
 CREATE TABLE IF NOT EXISTS user_profiles
 (
-    id              UUID            PRIMARY KEY REFERENCES users (id),
+    user_id         UUID            PRIMARY KEY REFERENCES users (id),
     gender          BOOLEAN,
     dob             DATE,
     country         VARCHAR(255),
@@ -38,7 +23,7 @@ CREATE TABLE IF NOT EXISTS user_profiles
     archived        BOOLEAN         NOT NULL    DEFAULT false,
     created_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS user_skills
@@ -84,25 +69,29 @@ CREATE TABLE IF NOT EXISTS user_activities
 
 CREATE TABLE IF NOT EXISTS notifications
 (
-    id         UUID         PRIMARY KEY,
-    user_id    UUID         NOT NULL,
-    message    TEXT         NOT NULL,
-    is_read    BOOLEAN      NOT NULL,
-    archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    id          UUID        PRIMARY KEY,
+    sender_id   UUID        NOT NULL,
+    receiver_id UUID        NOT NULL,
+    type        VARCHAR(50) NOT NULL,
+    message     TEXT        NOT NULL,
+    is_read     BOOLEAN     NOT NULL,
+    archived    BOOLEAN     NOT NULL    DEFAULT false,
+    created_at  TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users (id),
+    FOREIGN KEY (receiver_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS albums
 (
-    id         UUID         PRIMARY KEY,
-    user_id    UUID         NOT NULL,
-    name       VARCHAR(255) NOT NULL,
-    is_public  BOOLEAN      NOT NULL,
-    archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    id          UUID         PRIMARY KEY,
+    user_id     UUID         NOT NULL,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT,
+    is_public   BOOLEAN      NOT NULL,
+    archived    BOOLEAN      NOT NULL    DEFAULT false,
+    created_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

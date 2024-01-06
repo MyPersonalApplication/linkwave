@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.service.authentication.AuthenticationService;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

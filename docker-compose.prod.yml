@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  linkwave-app:
+    build: ./
+    container_name: linkwave-application
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - linkwave-network
+    depends_on:
+      - linkwave-db
+
   linkwave-db:
     image: postgres:14
     container_name: linkwave-db

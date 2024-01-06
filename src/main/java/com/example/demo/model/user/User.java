@@ -13,6 +13,7 @@ import com.example.demo.model.interact.LikeComment;
 import com.example.demo.model.interact.Post;
 import com.example.demo.model.interact.PostComment;
 import com.example.demo.model.interact.ReplyComment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -39,63 +40,79 @@ public class User extends BaseModel {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles = new ArrayList<>();
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private UserProfile userProfile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserSkill> userSkills;
+    @JsonIgnore
+    private List<UserSkill> userSkills;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserExperience> userExperiences;
+    @JsonIgnore
+    private List<UserExperience> userExperiences;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserActivity> userActivities;
+    @JsonIgnore
+    private List<UserActivity> userActivities;
 
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
-    private Set<UserActivity> targetUserActivities;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Notification> notifications;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Album> albums;
+    @JsonIgnore
+    private List<UserActivity> targetUserActivities;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private Set<FriendRequest> sentFriendRequests;
+    @JsonIgnore
+    private List<Notification> sentNotifications;
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    private Set<FriendRequest> receivedFriendRequests;
+    @JsonIgnore
+    private List<Notification> receivedNotifications;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Friendship> friendships;
-
-    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL)
-    private Set<Friendship> friendOfFriendships;
+    @JsonIgnore
+    private List<Album> albums;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private Set<Message> messages;
+    @JsonIgnore
+    private List<FriendRequest> sentFriendRequests;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FriendRequest> receivedFriendRequests;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Participant> participants;
+    @JsonIgnore
+    private List<Friendship> friendships;
+
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Friendship> friendOfFriendships;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Message> messages;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Receipt> receipts;
+    @JsonIgnore
+    private List<Participant> participants;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Post> posts;
+    @JsonIgnore
+    private List<Receipt> receipts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<PostComment> postComments;
+    @JsonIgnore
+    private List<Post> posts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<ReplyComment> replyComments;
+    @JsonIgnore
+    private List<PostComment> postComments;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<LikeComment> likeComments;
+    @JsonIgnore
+    private List<ReplyComment> replyComments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<LikeComment> likeComments;
 }

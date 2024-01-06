@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5005/linkwave_db
+    url: jdbc:postgresql://localhost:5432/linkwave_db
     username: linkwave_user
     password: ndquang@2002
   flyway:

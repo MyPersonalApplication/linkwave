@@ -19,7 +19,7 @@ import java.util.UUID;
 @Where(clause = "archived = false")
 public class UserProfile extends BaseModel {
     @Id
-    @GeneratedValue
+    @Column(name = "user_id")
     private UUID id;
 
     @Column
@@ -42,6 +42,6 @@ public class UserProfile extends BaseModel {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 }

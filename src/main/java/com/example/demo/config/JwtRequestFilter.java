@@ -34,23 +34,48 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String requestUri = request.getRequestURI();
-        if (!requestUri.startsWith("/api/") || (requestUri.startsWith("/api/auth/") && !"/api/user/change-password".equals(requestUri)
-                && !"/api/user/profile".equals(requestUri))) {
+
+        if (!isApiRequest(requestUri) || isUnauthenticatedEndpoint(requestUri)) {
             filterChain.doFilter(request, response);
             return;
         }
+
         try {
-            parseAndSetAuthentication(request);
+            authenticateUser(request);
         } catch (ExpiredJwtException e) {
-            logger.error("Cannot set user authentication: {}", e);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(convertObjectToJson(e));
+            handleExpiredJwtException(response, e);
         } catch (NotAuthorizedException e) {
-            logger.error("Cannot set user authentication: {}", e);
-            throw new NotAuthorizedException("NOT_AUTHORIZED", e.getMessage());
+            handleNotAuthorizedException(response, e);
         }
+
         filterChain.doFilter(request, response);
     }
+
+    private boolean isApiRequest(String requestUri) {
+        return requestUri.startsWith("/api/");
+    }
+
+    private boolean isUnauthenticatedEndpoint(String requestUri) {
+        return requestUri.startsWith("/api/auth/") &&
+                !"/api/user/change-password".equals(requestUri) &&
+                !"/api/user/profile".equals(requestUri);
+    }
+
+    private void authenticateUser(HttpServletRequest request) throws JsonProcessingException {
+        parseAndSetAuthentication(request);
+    }
+
+    private void handleExpiredJwtException(HttpServletResponse response, ExpiredJwtException e) throws IOException {
+        logger.error("Cannot set user authentication: {}", e);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(convertObjectToJson(e));
+    }
+
+    private void handleNotAuthorizedException(HttpServletResponse response, NotAuthorizedException e) throws NotAuthorizedException {
+        logger.error("Cannot set user authentication: {}", e);
+        throw new NotAuthorizedException("NOT_AUTHORIZED", e.getMessage());
+    }
+
 
     private String convertObjectToJson(Object object) throws JsonProcessingException {
         if (object == null) {
