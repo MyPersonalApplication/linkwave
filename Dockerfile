@@ -1,14 +1,13 @@
-# Use the official OpenJDK 17 image as the base image
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-bullseye
+ARG RUN_JAVA_VERSION=1.3.8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
-# Set the working directory in the container
+# disable stack trace optimization to log each stack trace
+ENV JAVA_OPTIONS="-XX:-OmitStackTraceInFastThrow"
+
 WORKDIR /app
-
-# Copy the packaged Spring Boot JAR file into the container
 COPY /build/libs/*.jar app.jar
 
-# Expose the port that the application will run on
 EXPOSE 8080
 
-# Command to run the Spring Boot application
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]

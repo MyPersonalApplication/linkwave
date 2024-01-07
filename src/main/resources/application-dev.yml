@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5005/linkwave_db
+    username: linkwave_user
+    password: ndquang@2002
   flyway:
     locations:
       - classpath:db/migration/schema
@@ -25,8 +25,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_URL}/realms/linkwave
-          jwk-set-uri: ${KEYCLOAK_URL}/realms/linkwave/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8081/realms/linkwave
+          jwk-set-uri: http://localhost:8081/realms/linkwave/protocol/openid-connect/certs
   data.rest.base-path: /api
 
 server:
@@ -38,12 +38,12 @@ jwt:
       principle-attribute: preferred_username
 
 keycloak:
-    url: ${KEYCLOAK_URL}
-    realm: master
-    master-client-id: admin-cli #for master realm
-    client-id: document-client
-    username: admin
-    password: admin
-    roles: SUPER_ADMIN, ADMIN, USER
-    defaultRole: USER
-    token-life-span: ${KEYCLOAK_TOKEN_LIFE_SPAN}
+  url: http://localhost:8081
+  realm: master
+  master-client-id: admin-cli #for master realm
+  client-id: document-client
+  username: admin
+  password: admin
+  roles: SUPER_ADMIN, ADMIN, USER
+  defaultRole: USER
+  token-life-span: 72000

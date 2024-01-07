@@ -76,7 +76,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         throw new NotAuthorizedException("NOT_AUTHORIZED", e.getMessage());
     }
 
-
     private String convertObjectToJson(Object object) throws JsonProcessingException {
         if (object == null) {
             return null;

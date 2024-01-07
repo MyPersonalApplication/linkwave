@@ -1,19 +1,8 @@
 version: '3'
 
 services:
-  linkwave-app:
-    build: ./
-    container_name: linkwave-application
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    networks:
-      - linkwave-network
-    depends_on:
-      - linkwave-db
-
   linkwave-db:
-    image: postgres:latest
+    image: postgres:15
     container_name: linkwave-db
     restart: unless-stopped
     environment:
@@ -21,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ndquang@2002
       POSTGRES_DB: linkwave_db
     ports:
-      - "5432:5432"
+      - "5005:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -50,11 +39,11 @@ services:
       - linkwave-network
 
   keycloak-db:
-    image: postgres:latest
+    image: postgres:15
     container_name: keycloak-db
     restart: unless-stopped
     ports:
-      - "5005:5432"
+      - "5008:5432"
     environment:
       POSTGRES_DB: keycloak_db
       POSTGRES_USER: linkwave_user

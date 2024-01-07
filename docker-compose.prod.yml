@@ -2,9 +2,17 @@ version: '3'
 
 services:
   linkwave-app:
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: linkwave-application
     restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://linkwave-db:5432/linkwave_db
+      SPRING_DATASOURCE_USERNAME: linkwave_user
+      SPRING_DATASOURCE_PASSWORD: ndquang@2002
+      KEYCLOAK_URL: http://linkwave-keycloak:8080
+      KEYCLOAK_TOKEN_LIFE_SPAN: 72000
     ports:
       - "8080:8080"
     networks:

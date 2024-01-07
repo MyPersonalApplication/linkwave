@@ -9,10 +9,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableConfigurationProperties(KeycloakConfig.class)
-public class ItlinkwaveApplication {
+public class LinkWaveApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ItlinkwaveApplication.class, args);
+		SpringApplication.run(LinkWaveApplication.class, args);
 	}
 
 }

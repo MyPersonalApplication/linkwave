@@ -1,0 +1,21 @@
+version: '3.5'
+services:
+  linkwave-db-test:
+    image: postgres:15
+    restart: unless-stopped
+    ports:
+      - "4008:5432"
+    environment:
+      POSTGRES_DB: linkwave
+      POSTGRES_USER: linkwave
+      POSTGRES_PASSWORD: 123456
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "linkwave" ]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    networks:
+      - linkwave-network-test
+networks:
+  linkwave-network-test:
+    driver: bridge

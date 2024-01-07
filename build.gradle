@@ -38,6 +38,23 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.0.0'
 
+	/* test container */
+	testImplementation "org.testcontainers:testcontainers:1.18.0"
+	testImplementation "org.testcontainers:junit-jupiter:1.18.0"
+
+	/* lombok */
+	implementation "org.projectlombok:lombok:1.18.26"
+	annotationProcessor "org.projectlombok:lombok:1.18.26"
+	testAnnotationProcessor "org.projectlombok:lombok:1.18.26"
+	implementation "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	/* mapstruct */
+	implementation "org.mapstruct:mapstruct:1.5.3.Final"
+	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
+
 	/* Keycloak */
 	implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: '22.0.5'
 	implementation group: 'org.keycloak', name: 'keycloak-admin-client', version: '22.0.5'

@@ -33,8 +33,6 @@ public class KeycloakService {
 
     private final TokenHandler tokenHandler;
     private final Keycloak keycloak;
-    private final UserRepository userRepository;
-
 
     public KeycloakBuilder newKeycloakBuilderWithPasswordCredentials(String username, String password, String realm) {
         return KeycloakBuilder.builder()
