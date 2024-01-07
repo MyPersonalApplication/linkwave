@@ -21,7 +21,7 @@ services:
       - linkwave-db
 
   linkwave-db:
-    image: postgres:14
+    image: postgres:15
     container_name: linkwave-db
     restart: unless-stopped
     environment:
@@ -70,11 +70,11 @@ services:
       - linkwave-network
 
   keycloak-db:
-    image: postgres:14
+    image: postgres:15
     container_name: keycloak-db
     restart: unless-stopped
     ports:
-      - "5006:5432"
+      - "5008:5432"
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: linkwave
