@@ -35,6 +35,20 @@ services:
     networks:
       - linkwave-network
 
+  linkwave-pgadmin4:
+    image: dpage/pgadmin4:latest
+    container_name: linkwave-pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ndquang5802@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: ndquang@2002
+    ports:
+      - "5050:80"
+    depends_on:
+      - linkwave-db
+    networks:
+      - linkwave-network
+
   linkwave-keycloak:
     image: bitnami/keycloak:22.0.5
     depends_on:
