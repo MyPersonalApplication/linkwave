@@ -25,9 +25,9 @@ services:
     container_name: linkwave-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: linkwave
+      POSTGRES_USER: linkwave_user
       POSTGRES_PASSWORD: ndquang@2002
-      POSTGRES_DB: linkwave
+      POSTGRES_DB: linkwave_db
     ports:
       - "5005:5432"
     volumes:
@@ -56,8 +56,8 @@ services:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: postgres
       DB_ADDR: keycloak-db
-      DB_DATABASE: keycloak
-      DB_USER: linkwave
+      DB_DATABASE: keycloak_db
+      DB_USER: linkwave_user
       DB_PASSWORD: ndquang@2002
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -76,8 +76,8 @@ services:
     ports:
       - "5008:5432"
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: linkwave
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: linkwave_user
       POSTGRES_PASSWORD: ndquang@2002
     networks:
       - linkwave-network
