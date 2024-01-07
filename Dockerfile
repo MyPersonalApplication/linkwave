@@ -1,13 +1,14 @@
-FROM openjdk:17-bullseye
-ARG RUN_JAVA_VERSION=1.3.8
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+FROM gradle:7.5.1-jdk17 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon
 
-# disable stack trace optimization to log each stack trace
-ENV JAVA_OPTIONS="-XX:-OmitStackTraceInFastThrow"
-
-WORKDIR /app
-COPY /build/libs/*.jar app.jar
+FROM openjdk:17-jdk-alpine
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+RUN mkdir /app
+
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/linkwave.jar
+
+ENTRYPOINT ["java","-jar","/app/linkwave.jar"]
