@@ -2,6 +2,7 @@ package com.example.demo.service.authentication;
 
 import com.example.demo.controller.exception.AuthenticationException;
 import com.example.demo.controller.exception.ConflictingDataException;
+import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
 import com.example.demo.dto.user.UserDTO;
@@ -51,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .map(RoleRepresentation::getName).map(role -> "ROLE_" + role).toList();
 
             return new AuthenticationResponse(accessTokenResponse, roles);
-        } catch (AccessDeniedException ex){
+        } catch (AccessDeniedException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new AuthenticationException(ErrorMessage.INCORRECT_LOGIN_CREDENTIALS, ex);
@@ -59,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String registerNewUser(RegisterDTO registerDTO) {
+    public ResponseDTO registerNewUser(RegisterDTO registerDTO) {
         try {
             // Assuming keycloakService is an instance of your Keycloak service
             Keycloak keycloak = keycloakService.getMasterKeycloakInstance().build();
@@ -107,17 +108,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     userEntity.setUserProfile(userProfile);
 
                     userService.save(userEntity);
-                    return "User registered successfully!";
+                    return ResponseDTO.builder()
+                            .message("User registered successfully!")
+                            .build();
                 } catch (Exception e) {
                     log.error("Error while saving user: {}", e.getMessage());
                     deleteAccountInKeycloak(userId, realmResource);
                     throw new ConflictingDataException("Can not create user");
                 }
             } else {
-                return "Failed to register user. HTTP response code: " + response.getStatus();
+                return ResponseDTO.builder()
+                        .message("Failed to register user. HTTP response code: " + response.getStatus())
+                        .build();
             }
         } catch (Exception e) {
-            return "Failed to register user: " + e.getMessage();
+            return ResponseDTO.builder()
+                    .message("Failed to register user: " + e.getMessage())
+                    .build();
         }
     }
 

@@ -47,3 +47,4 @@ keycloak:
     roles: SUPER_ADMIN, ADMIN, USER
     defaultRole: USER
     token-life-span: ${KEYCLOAK_TOKEN_LIFE_SPAN}
+    ssl-required: none

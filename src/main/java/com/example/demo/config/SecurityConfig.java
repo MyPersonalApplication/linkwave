@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -22,13 +25,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
+
+        http.cors(cors -> {
+            cors.configurationSource(request -> {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowedOrigins(List.of("*"));
+                corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+                return corsConfiguration;
+            });
+        });
+
         http.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers("/api/auth/**").permitAll();
             authorize.anyRequest().authenticated();
         });
+
         http.oauth2ResourceServer(t -> t.jwt(c -> c.jwtAuthenticationConverter(jwtAuthConverter)));
         http.sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
