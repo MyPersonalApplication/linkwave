@@ -20,7 +20,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginDTO authenticationRequest) throws AccessDeniedException {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginDTO authenticationRequest) {
         AuthenticationResponse response = authenticationService.authenticate(
                 authenticationRequest.getEmail(), authenticationRequest.getPassword());
         return ResponseEntity.ok(response);
@@ -28,6 +28,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<ResponseDTO> register(@RequestBody RegisterDTO registerDTO) {
-        return ResponseEntity.ok(authenticationService.registerNewUser(registerDTO));
+        ResponseDTO responseDTO = authenticationService.registerNewUser(registerDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 }

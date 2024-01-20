@@ -7,7 +7,7 @@ import com.example.demo.dto.user.UserDTO;
 import org.springframework.security.access.AccessDeniedException;
 
 public interface AuthenticationService {
-    AuthenticationResponse authenticate(String username, String password) throws AccessDeniedException;
+    AuthenticationResponse authenticate(String username, String password);
     ResponseDTO registerNewUser(RegisterDTO registerDTO);
     UserDTO getProfile();
 }

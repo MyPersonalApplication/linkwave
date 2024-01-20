@@ -39,6 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(String username, String password) throws AccessDeniedException {
         try {
+            keycloakService.isVerifiedEmail(username, realmName);
             Keycloak newKeycloak = keycloakService.newKeycloakBuilderWithPasswordCredentials(username, password, realmName).build();
             AccessTokenResponse accessTokenResponse = newKeycloak.tokenManager().getAccessToken();
 
@@ -51,7 +52,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             List<String> roles = userResource.roles().realmLevel().listEffective().stream()
                     .map(RoleRepresentation::getName).map(role -> "ROLE_" + role).toList();
 
-            return new AuthenticationResponse(accessTokenResponse, roles);
+            return AuthenticationResponse.builder()
+                    .accessTokenResponse(accessTokenResponse)
+                    .roles(roles)
+                    .build();
         } catch (AccessDeniedException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -74,6 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 String userId = CreatedResponseUtil.getCreatedId(response);
                 RoleRepresentation userRole = realmResource.roles().get("USER").toRepresentation();
                 realmResource.users().get(userId).roles().realmLevel().add(Collections.singletonList(userRole));
+                realmResource.users().get(userId).sendVerifyEmail();
 
                 try {
                     User userEntity = User.builder()

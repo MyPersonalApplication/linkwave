@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS user_activities
     id          UUID         PRIMARY KEY,
     user_id     UUID         NOT NULL,
     target_id   UUID         NOT NULL,
+--     action: follow, like, comment, reply, share, post, update_profile, update_experience, update_skill
     action      VARCHAR(255) NOT NULL,
     archived    BOOLEAN      NOT NULL   DEFAULT false,
     created_at  TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
@@ -72,6 +73,7 @@ CREATE TABLE IF NOT EXISTS notifications
     id          UUID        PRIMARY KEY,
     sender_id   UUID        NOT NULL,
     receiver_id UUID        NOT NULL,
+--     type: friend_request, message, post, comment, like, reply, follow
     type        VARCHAR(50) NOT NULL,
     message     TEXT        NOT NULL,
     is_read     BOOLEAN     NOT NULL,

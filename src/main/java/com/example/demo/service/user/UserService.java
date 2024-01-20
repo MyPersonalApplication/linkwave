@@ -1,10 +1,9 @@
 package com.example.demo.service.user;
 
+import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.model.user.User;
-import com.example.demo.repository.UserProfileRepository;
 import com.example.demo.repository.UserRepository;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

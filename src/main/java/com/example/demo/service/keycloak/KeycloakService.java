@@ -2,7 +2,7 @@ package com.example.demo.service.keycloak;
 
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.dto.user.UserDTO;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.enums.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -11,6 +11,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,6 +42,14 @@ public class KeycloakService {
                 .clientId(keycloakClientId)
                 .username(username)
                 .password(password);
+    }
+
+    public void isVerifiedEmail(String email, String realm) {
+        RealmResource realmResource = keycloak.realm(realm);
+        var user = realmResource.users().search(email).get(0);
+        if (Boolean.FALSE.equals(user.isEmailVerified())) {
+            throw new AccessDeniedException(ErrorMessage.HAVE_NOT_VERIFIED_EMAIL);
+        }
     }
 
     public RealmResource getRealmResource(String realm) {
