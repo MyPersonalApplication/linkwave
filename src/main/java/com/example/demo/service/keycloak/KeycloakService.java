@@ -64,6 +64,19 @@ public class KeycloakService {
         UserRepresentation userRepresentation = users.get(userId).toRepresentation();
 
         return UserDTO.builder()
+                .id(UUID.fromString(userId))
+                .email(userRepresentation.getEmail())
+                .firstName(userRepresentation.getFirstName())
+                .lastName(userRepresentation.getLastName())
+                .build();
+    }
+
+    public UserDTO getUserProfileById(String realmName, String userId) {
+        UsersResource users = keycloak.realm(realmName).users();
+        UserRepresentation userRepresentation = users.get(userId).toRepresentation();
+
+        return UserDTO.builder()
+                .id(UUID.fromString(userId))
                 .email(userRepresentation.getEmail())
                 .firstName(userRepresentation.getFirstName())
                 .lastName(userRepresentation.getLastName())

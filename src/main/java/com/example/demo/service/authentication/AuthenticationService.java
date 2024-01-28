@@ -9,5 +9,4 @@ import org.springframework.security.access.AccessDeniedException;
 public interface AuthenticationService {
     AuthenticationResponse authenticate(String username, String password);
     ResponseDTO registerNewUser(RegisterDTO registerDTO);
-    UserDTO getProfile();
 }

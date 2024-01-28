@@ -41,11 +41,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         try {
-            authenticateUser(request);
+            parseAndSetAuthentication(request);
         } catch (ExpiredJwtException e) {
-            handleExpiredJwtException(response, e);
+            logger.error("Cannot set user authentication: {}", e);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(convertObjectToJson(e));
         } catch (NotAuthorizedException e) {
-            handleNotAuthorizedException(response, e);
+            logger.error("Cannot set user authentication: {}", e);
+            throw new NotAuthorizedException("NOT_AUTHORIZED", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
@@ -59,21 +62,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return requestUri.startsWith("/api/auth/") &&
                 !"/api/user/change-password".equals(requestUri) &&
                 !"/api/user/profile".equals(requestUri);
-    }
-
-    private void authenticateUser(HttpServletRequest request) throws JsonProcessingException {
-        parseAndSetAuthentication(request);
-    }
-
-    private void handleExpiredJwtException(HttpServletResponse response, ExpiredJwtException e) throws IOException {
-        logger.error("Cannot set user authentication: {}", e);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(convertObjectToJson(e));
-    }
-
-    private void handleNotAuthorizedException(HttpServletResponse response, NotAuthorizedException e) throws NotAuthorizedException {
-        logger.error("Cannot set user authentication: {}", e);
-        throw new NotAuthorizedException("NOT_AUTHORIZED", e.getMessage());
     }
 
     private String convertObjectToJson(Object object) throws JsonProcessingException {
@@ -109,7 +97,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private void isTokenExpired(Jwt jwt) {
         Instant expiration = Instant.ofEpochMilli(Long.parseLong(jwt.getClaims().get("exp").toString()) * 1000);
         if (Instant.now().isAfter(expiration)) {
-            throw new ExpiredJwtException(null, null, null);
+            throw new ExpiredJwtException(null, null, "TOKEN_EXPIRED");
         }
     }
 

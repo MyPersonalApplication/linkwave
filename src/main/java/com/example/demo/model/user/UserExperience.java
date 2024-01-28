@@ -1,5 +1,6 @@
 package com.example.demo.model.user;
 
+import com.example.demo.enums.ExperienceType;
 import com.example.demo.model.BaseModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.Date;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -34,13 +36,17 @@ public class UserExperience extends BaseModel {
     private String description;
 
     @Column(name = "start_date")
-    private String startDate;
+    private Date startDate;
 
     @Column(name = "end_date")
-    private String endDate;
+    private Date endDate;
 
     @Column
     private String location;
+
+    @Column(name = "experience_type")
+    @Enumerated(EnumType.STRING)
+    private ExperienceType experienceType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -2,6 +2,7 @@ package com.example.demo.controller.error;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.example.demo.controller.exception.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -114,7 +115,8 @@ public class ControllerAdvisor {
 
     @ResponseBody
     @ExceptionHandler({
-            AuthenticationException.class
+            AuthenticationException.class,
+            ExpiredJwtException.class,
     })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     ApiError authenticationHandler(Exception ex) {

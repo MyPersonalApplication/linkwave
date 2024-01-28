@@ -6,7 +6,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -39,6 +41,17 @@ public class UserProfile extends BaseModel {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_hobbies", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "hobby")
+    private List<String> hobbies = new ArrayList<>();
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(name = "cover_url")
+    private String coverUrl;
 
     @OneToOne
     @MapsId

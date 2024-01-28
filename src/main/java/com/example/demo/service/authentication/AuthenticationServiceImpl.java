@@ -5,7 +5,6 @@ import com.example.demo.controller.exception.ConflictingDataException;
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
-import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.model.user.User;
 import com.example.demo.model.user.UserProfile;
@@ -122,20 +121,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     throw new ConflictingDataException("Can not create user");
                 }
             } else {
-                return ResponseDTO.builder()
-                        .message("Failed to register user. HTTP response code: " + response.getStatus())
-                        .build();
+                throw new ConflictingDataException("Failed to register user");
             }
         } catch (Exception e) {
-            return ResponseDTO.builder()
-                    .message("Failed to register user: " + e.getMessage())
-                    .build();
+            throw new ConflictingDataException("Failed to register user");
         }
-    }
-
-    @Override
-    public UserDTO getProfile() {
-        return keycloakService.getUserProfile(realmName);
     }
 
     private UserRepresentation getUserRepresentation(RegisterDTO registerDTO) {

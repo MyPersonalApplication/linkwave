@@ -1,22 +1,31 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.user.UserDTO;
-import com.example.demo.service.authentication.AuthenticationService;
-import jakarta.annotation.security.RolesAllowed;
+import com.example.demo.dto.user.profile.UserProfileUpdateDTO;
+import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/profile")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('USER') or hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 public class UserController {
-    private final AuthenticationService authenticationService;
+    private final UserService userService;
 
-    @GetMapping(value = "/profile")
-    public ResponseEntity<UserDTO> getProfile() {
-        return ResponseEntity.ok(authenticationService.getProfile());
+    @GetMapping(value = "/me")
+    public ResponseEntity<UserDTO> getCurrentProfile() {
+        return ResponseEntity.ok(userService.getCurrentProfile());
+    }
+
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<UserDTO> getProfile(@PathVariable String userId) {
+        return ResponseEntity.ok(userService.getProfileByUserId(userId));
+    }
+
+    @PutMapping(value = "/{userId}")
+    public ResponseEntity<ResponseDTO> updateProfile(@PathVariable String userId, @RequestBody UserProfileUpdateDTO userProfileUpdateDTO) {
+        return ResponseEntity.ok(userService.updateProfile(userId, userProfileUpdateDTO));
     }
 }

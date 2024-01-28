@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Getter
@@ -19,8 +20,8 @@ public class BaseModel {
     protected boolean archived;
 
     @Column(name = "created_at", columnDefinition = "timestamp default now()")
-    protected Date createdAt;
+    protected Timestamp createdAt;
 
     @Column(name = "updated_at", columnDefinition = "timestamp default now()")
-    protected Date updatedAt;
+    protected Timestamp updatedAt;
 }

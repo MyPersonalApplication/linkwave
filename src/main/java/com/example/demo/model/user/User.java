@@ -31,7 +31,6 @@ import java.util.*;
 @Where(clause = "archived = false")
 public class User extends BaseModel {
     @Id
-    @GeneratedValue
     private UUID id;
 
     @Column(unique = true, nullable = false)
