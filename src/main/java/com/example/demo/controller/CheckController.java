@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CheckController {
     @GetMapping
-    public ResponseEntity<String> checkHealth() {
-        return ResponseEntity.ok().body("Health check");
+    public ResponseEntity<ResponseDTO> checkHealth() {
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .message("Health check")
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 }
