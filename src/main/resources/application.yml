@@ -9,10 +9,12 @@ spring:
       - classpath:db/migration/data
     clean-on-validation-error: true
   jpa:
-    generate-ddl: off
-    hibernate.ddl-auto: none
-    hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
       hibernate:
@@ -27,7 +29,9 @@ spring:
         jwt:
           issuer-uri: ${KEYCLOAK_URL}/realms/linkwave
           jwk-set-uri: ${KEYCLOAK_URL}/realms/linkwave/protocol/openid-connect/certs
-  data.rest.base-path: /api
+  data:
+    rest:
+      base-path: /api
 
 server:
   port: 8080
@@ -42,9 +46,8 @@ keycloak:
     realm: master
     master-client-id: admin-cli #for master realm
     client-id: document-client
-    username: admin
-    password: admin
+    username: ${KEYCLOAK_USERNAME}
+    password: ${KEYCLOAK_PASSWORD}
     roles: SUPER_ADMIN, ADMIN, USER
     defaultRole: USER
     token-life-span: ${KEYCLOAK_TOKEN_LIFE_SPAN}
-    ssl-required: none
