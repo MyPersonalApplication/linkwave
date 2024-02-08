@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.friendrequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class FriendRequestDTO {
-    private UUID receiverId;
+public class AcceptRequestDTO {
+    private UUID requestId;
 }

@@ -83,6 +83,14 @@ public class UserService {
         return user.get();
     }
 
+    public User loadUserById(UUID userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.USER_NOT_FOUND);
+        }
+        return user.get();
+    }
+
     public void save(User user) {
         userRepository.save(user);
     }

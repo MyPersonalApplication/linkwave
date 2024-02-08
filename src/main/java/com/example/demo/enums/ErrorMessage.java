@@ -12,6 +12,8 @@ public class ErrorMessage {
     public static final String CHANGE_PASSWORD_WRONG_OLD_PASSWORD = "CHANGE_PASSWORD_WRONG_OLD_PASSWORD";
     public static final String INVALID_ACCOUNT = "INVALID_ACCOUNT";
     public static final String INVALID_EXPERIENCE_TYPE = "INVALID_EXPERIENCE_TYPE";
+    public static final String FRIEND_REQUEST_ALREADY_EXISTS = "FRIEND_REQUEST_ALREADY_EXISTS";
+    public static final String FRIEND_REQUEST_NOT_FOUND = "FRIEND_REQUEST_NOT_FOUND";
 
     private ErrorMessage() {
     }

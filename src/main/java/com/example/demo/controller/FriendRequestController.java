@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FriendRequestDTO;
+import com.example.demo.dto.friendrequest.AcceptRequestDTO;
+import com.example.demo.dto.friendrequest.SendRequestDTO;
 import com.example.demo.dto.ResponseDTO;
+import com.example.demo.dto.friendrequest.RejectRequestDTO;
 import com.example.demo.service.friendrequest.FriendRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +23,20 @@ public class FriendRequestController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<ResponseDTO> sendFriendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
-        ResponseDTO responseDTO = friendRequestService.sendFriendRequest(friendRequestDTO.getReceiverId());
+    public ResponseEntity<ResponseDTO> sendFriendRequest(@RequestBody SendRequestDTO sendRequestDTO) {
+        ResponseDTO responseDTO = friendRequestService.sendFriendRequest(sendRequestDTO.getReceiverId());
         return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<String> acceptFriendRequest() {
-        return null;
+    public ResponseEntity<ResponseDTO> acceptFriendRequest(@RequestBody AcceptRequestDTO acceptRequestDTO) {
+        ResponseDTO responseDTO = friendRequestService.acceptFriendRequest(acceptRequestDTO.getRequestId());
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectFriendRequest() {
-        return null;
+    public ResponseEntity<ResponseDTO> rejectFriendRequest(@RequestBody RejectRequestDTO rejectRequestDTO) {
+        ResponseDTO responseDTO = friendRequestService.rejectFriendRequest(rejectRequestDTO.getRequestId());
+        return ResponseEntity.ok(responseDTO);
     }
 }

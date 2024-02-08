@@ -6,4 +6,8 @@ import java.util.UUID;
 
 public interface FriendRequestService {
     ResponseDTO sendFriendRequest(UUID receiverId);
+
+    ResponseDTO acceptFriendRequest(UUID requestId);
+
+    ResponseDTO rejectFriendRequest(UUID requestId);
 }
