@@ -1,6 +1,7 @@
 package com.example.demo.service.keycloak;
 
 import com.example.demo.config.authentication.TokenHandler;
+import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
 import lombok.RequiredArgsConstructor;
@@ -72,15 +73,19 @@ public class KeycloakService {
     }
 
     public UserDTO getUserProfileById(String realmName, String userId) {
-        UsersResource users = keycloak.realm(realmName).users();
-        UserRepresentation userRepresentation = users.get(userId).toRepresentation();
+        try {
+            UsersResource users = keycloak.realm(realmName).users();
+            UserRepresentation userRepresentation = users.get(userId).toRepresentation();
 
-        return UserDTO.builder()
-                .id(UUID.fromString(userId))
-                .email(userRepresentation.getEmail())
-                .firstName(userRepresentation.getFirstName())
-                .lastName(userRepresentation.getLastName())
-                .build();
+            return UserDTO.builder()
+                    .id(UUID.fromString(userId))
+                    .email(userRepresentation.getEmail())
+                    .firstName(userRepresentation.getFirstName())
+                    .lastName(userRepresentation.getLastName())
+                    .build();
+        } catch (Exception e) {
+            throw new NotFoundException(ErrorMessage.USER_NOT_FOUND);
+        }
     }
 
     public KeycloakBuilder getMasterKeycloakInstance() {
@@ -92,5 +97,10 @@ public class KeycloakService {
                 .username(keycloakUsername)
                 .password(keycloakPassword)
                 .scope("openid");
+    }
+
+    public void updateUserProfile(String realmName, String userId, UserRepresentation userRepresentation) {
+        UsersResource usersResource = keycloak.realm(realmName).users();
+        usersResource.get(userId).update(userRepresentation);
     }
 }

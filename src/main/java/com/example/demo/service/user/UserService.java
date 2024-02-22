@@ -3,9 +3,9 @@ package com.example.demo.service.user;
 import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.dto.user.UserUpdateDTO;
 import com.example.demo.dto.user.experience.UserExperienceDTO;
 import com.example.demo.dto.user.profile.UserProfileDTO;
-import com.example.demo.dto.user.profile.UserProfileUpdateDTO;
 import com.example.demo.dto.user.skill.UserSkillDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.user.UserExperienceMapper;
@@ -21,6 +21,7 @@ import com.example.demo.repository.user.UserRepository;
 import com.example.demo.repository.user.UserSkillRepository;
 import com.example.demo.service.keycloak.KeycloakService;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class UserService {
     public UserDTO getProfileByUserId(String userId) {
         // Get user profile from keycloak
         UserDTO userDTO = keycloakService.getUserProfileById(realmName, userId);
-        return buildUserDTO(userDTO, UUID.fromString(userId));
+        return buildUserDTO(userDTO, userDTO.getId());
     }
 
     private UserDTO buildUserDTO(UserDTO userDTO, UUID userId) {
@@ -95,13 +96,26 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public ResponseDTO updateProfile(String userId, UserProfileUpdateDTO userProfileUpdateDTO) {
+    public ResponseDTO updateProfile(String userId, UserUpdateDTO userUpdateDTO) {
         Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUserId(UUID.fromString(userId)));
         if (userProfile.isEmpty()) {
             throw new NotFoundException(ErrorMessage.USER_PROFILE_NOT_FOUND);
         }
-        UserProfileMapper.INSTANCE.mapUpdate(userProfile.get(), userProfileUpdateDTO);
+
+        // Update user profile in keycloak
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setFirstName(userUpdateDTO.getFirstName());
+        userRepresentation.setLastName(userUpdateDTO.getLastName());
+        userRepresentation.setEmail(userUpdateDTO.getEmail());
+        keycloakService.updateUserProfile(realmName, userId, userRepresentation);
+
+        // Update user profile in database
+        if (userUpdateDTO.getProfile().getId() == null) {
+            userUpdateDTO.getProfile().setId(UUID.fromString(userId));
+        }
+        UserProfileMapper.INSTANCE.mapUpdate(userProfile.get(), userUpdateDTO.getProfile());
         userProfileRepository.save(userProfile.get());
+
         return ResponseDTO.builder()
                 .message("Update profile successfully")
                 .build();

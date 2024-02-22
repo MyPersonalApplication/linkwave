@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.dto.user.UserUpdateDTO;
 import com.example.demo.dto.user.profile.UserProfileUpdateDTO;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{userId}")
-    public ResponseEntity<ResponseDTO> updateProfile(@PathVariable String userId, @RequestBody UserProfileUpdateDTO userProfileUpdateDTO) {
-        return ResponseEntity.ok(userService.updateProfile(userId, userProfileUpdateDTO));
+    public ResponseEntity<ResponseDTO> updateProfile(@PathVariable String userId, @RequestBody UserUpdateDTO userUpdateDTO) {
+        return ResponseEntity.ok(userService.updateProfile(userId, userUpdateDTO));
     }
 }
