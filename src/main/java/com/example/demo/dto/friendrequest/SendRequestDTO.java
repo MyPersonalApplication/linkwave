@@ -14,5 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class SendRequestDTO {
+    private UUID senderId;
     private UUID receiverId;
 }

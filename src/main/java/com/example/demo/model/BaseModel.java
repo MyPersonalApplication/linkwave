@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@MappedSuperclass
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +22,8 @@ public class BaseModel {
     protected boolean archived;
 
     @Column(name = "created_at", columnDefinition = "timestamp default now()")
-    protected Timestamp createdAt;
+    protected Date createdAt;
 
     @Column(name = "updated_at", columnDefinition = "timestamp default now()")
-    protected Timestamp updatedAt;
+    protected Date updatedAt;
 }

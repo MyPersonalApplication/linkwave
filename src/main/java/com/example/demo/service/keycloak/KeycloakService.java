@@ -103,4 +103,23 @@ public class KeycloakService {
         UsersResource usersResource = keycloak.realm(realmName).users();
         usersResource.get(userId).update(userRepresentation);
     }
+
+    public Map<String, UserDTO> getUserProfilesByIds(String realmName, List<String> senderIds) {
+        UsersResource users = keycloak.realm(realmName).users();
+        Map<String, UserDTO> userProfileMap = new HashMap<>();
+        senderIds.forEach(senderId -> {
+            try {
+                UserRepresentation userRepresentation = users.get(senderId).toRepresentation();
+                userProfileMap.put(senderId, UserDTO.builder()
+                        .id(UUID.fromString(senderId))
+                        .firstName(userRepresentation.getFirstName())
+                        .lastName(userRepresentation.getLastName())
+                        .build());
+            } catch (Exception e) {
+                userProfileMap.put(senderId, null);
+            }
+        });
+
+        return userProfileMap;
+    }
 }

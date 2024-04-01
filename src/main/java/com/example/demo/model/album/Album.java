@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,10 +36,6 @@ public class Album extends BaseModel {
     @Column(name = "is_public")
     private Boolean isPublic;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
-    private Set<AlbumMedia> albumMedia;
+    private List<AlbumMedia> albumMedia;
 }

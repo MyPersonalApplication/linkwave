@@ -35,6 +35,10 @@ public class AlbumMedia extends BaseModel {
     private Boolean isVideo;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 }

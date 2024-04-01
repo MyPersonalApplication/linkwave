@@ -1,5 +1,7 @@
 package com.example.demo.dto.user;
 
+import com.example.demo.dto.user.avatar.UserAvatarDTO;
+import com.example.demo.dto.user.cover.UserCoverDTO;
 import com.example.demo.dto.user.experience.UserExperienceDTO;
 import com.example.demo.dto.user.profile.UserProfileDTO;
 import com.example.demo.dto.user.skill.UserSkillDTO;
@@ -23,6 +25,8 @@ public class UserDTO {
     private String lastName;
     private String email;
     private UserProfileDTO profile;
+    private UserAvatarDTO avatar;
+    private UserCoverDTO cover;
     private List<UserSkillDTO> skills;
     private List<UserExperienceDTO> experiences;
 }

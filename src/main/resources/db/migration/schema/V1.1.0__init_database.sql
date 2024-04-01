@@ -4,11 +4,11 @@ CREATE TABLE IF NOT EXISTS users
     email      VARCHAR(255) NOT NULL,
     is_active  BOOLEAN      NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS user_profiles
+CREATE TABLE IF NOT EXISTS user_profile
 (
     user_id         UUID            PRIMARY KEY REFERENCES users (id),
     gender          BOOLEAN,
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS user_profiles
     avatar_url      TEXT,
     cover_url       TEXT,
     archived        BOOLEAN         NOT NULL    DEFAULT false,
-    created_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at      TIMESTAMP       NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP       NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS user_skills
     skill_name         VARCHAR(255),
     certification_name VARCHAR(255),
     archived           BOOLEAN      NOT NULL    DEFAULT false,
-    created_at         TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at         TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at         TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS user_experiences
 --     type: work, education
     experience_type         VARCHAR(50),
     archived                BOOLEAN       NOT NULL    DEFAULT false,
-    created_at              TIMESTAMP     NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at              TIMESTAMP     NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at              TIMESTAMP     NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at              TIMESTAMP     NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS user_activities
 --     action: follow, like, comment, reply, share, post, update_profile, update_experience, update_skill
     action      VARCHAR(255) NOT NULL,
     archived    BOOLEAN      NOT NULL   DEFAULT false,
-    created_at  TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
+    created_at  TIMESTAMP    NULL   DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NULL   DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (target_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS notifications
     message     TEXT        NOT NULL,
     is_read     BOOLEAN     NOT NULL,
     archived    BOOLEAN     NOT NULL    DEFAULT false,
-    created_at  TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at  TIMESTAMP   NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP   NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -91,11 +91,10 @@ CREATE TABLE IF NOT EXISTS albums
     id          UUID         PRIMARY KEY,
     user_id     UUID         NOT NULL,
     name        VARCHAR(255) NOT NULL,
-    description TEXT,
     is_public   BOOLEAN      NOT NULL,
     archived    BOOLEAN      NOT NULL    DEFAULT false,
-    created_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at  TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -107,8 +106,8 @@ CREATE TABLE IF NOT EXISTS album_media
     url         TEXT         NOT NULL,
     is_video    BOOLEAN      NOT NULL,
     archived    BOOLEAN      NOT NULL    DEFAULT false,
-    created_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at  TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (album_id) REFERENCES albums (id) ON DELETE CASCADE
 );
 
@@ -118,8 +117,8 @@ CREATE TABLE IF NOT EXISTS friend_requests
     sender_id   UUID        NOT NULL,
     receiver_id UUID        NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -130,8 +129,8 @@ CREATE TABLE IF NOT EXISTS friendships
     user_id    UUID         NOT NULL,
     friend_id  UUID         NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -141,8 +140,8 @@ CREATE TABLE IF NOT EXISTS conversations
     id         UUID         PRIMARY KEY,
     name       VARCHAR(255),
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS messages
@@ -152,8 +151,8 @@ CREATE TABLE IF NOT EXISTS messages
     sender_id       UUID        NOT NULL,
     content         TEXT        NOT NULL,
     archived        BOOLEAN     NOT NULL    DEFAULT false,
-    created_at      TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at      TIMESTAMP   NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (conversation_id) REFERENCES conversations (id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -164,8 +163,8 @@ CREATE TABLE IF NOT EXISTS participants
     conversation_id UUID        NOT NULL,
     user_id         UUID        NOT NULL,
     archived        BOOLEAN     NOT NULL    DEFAULT false,
-    created_at      TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP   NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at      TIMESTAMP   NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (conversation_id) REFERENCES conversations (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -177,8 +176,8 @@ CREATE TABLE IF NOT EXISTS receipts
     user_id    UUID         NOT NULL,
     is_read    BOOLEAN      NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -193,8 +192,8 @@ CREATE TABLE IF NOT EXISTS message_attachments
     file_type  VARCHAR(255) NOT NULL,
     file_size  BIGINT       NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
 );
 
@@ -204,8 +203,8 @@ CREATE TABLE IF NOT EXISTS posts
     user_id    UUID         NOT NULL,
     content    TEXT,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -217,8 +216,8 @@ CREATE TABLE IF NOT EXISTS post_media
     caption    TEXT,
     is_video   BOOLEAN      NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE
 );
 
@@ -228,8 +227,8 @@ CREATE TABLE IF NOT EXISTS post_likes
     post_id    UUID      NOT NULL,
     user_id    UUID      NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -241,8 +240,8 @@ CREATE TABLE IF NOT EXISTS post_comments
     user_id    UUID         NOT NULL,
     content    TEXT         NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -254,8 +253,8 @@ CREATE TABLE IF NOT EXISTS reply_comments
     user_id    UUID         NOT NULL,
     content    TEXT         NOT NULL,
     archived   BOOLEAN      NOT NULL    DEFAULT false,
-    created_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NULL    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (comment_id) REFERENCES post_comments (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -267,8 +266,8 @@ CREATE TABLE IF NOT EXISTS like_comments
     reply_comment_id    UUID,
     user_id             UUID         NOT NULL,
     archived            BOOLEAN      NOT NULL   DEFAULT false,
-    created_at          TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
-    updated_at          TIMESTAMP    NOT NULL   DEFAULT CURRENT_TIMESTAMP,
+    created_at          TIMESTAMP    NULL   DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP    NULL   DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_comment_id) REFERENCES post_comments (id) ON DELETE CASCADE,
     FOREIGN KEY (reply_comment_id) REFERENCES reply_comments (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE

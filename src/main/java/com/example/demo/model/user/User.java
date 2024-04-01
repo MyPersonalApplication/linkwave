@@ -43,6 +43,14 @@ public class User extends BaseModel {
     @PrimaryKeyJoinColumn
     private UserProfile userProfile;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private UserAvatar userAvatar;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private UserCover userCover;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<UserSkill> userSkills;
@@ -69,7 +77,7 @@ public class User extends BaseModel {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Album> albums;
+    private List<AlbumMedia> albumMedia;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     @JsonIgnore

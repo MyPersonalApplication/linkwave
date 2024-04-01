@@ -1,11 +1,14 @@
-package com.example.demo.dto.friendship;
+package com.example.demo.dto.friendrequest;
 
+import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -13,7 +16,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class FriendShipDTO {
-    private UUID userId;
-    private UUID friendId;
+public class FriendRequestDTO {
+    private UUID id;
+    private UserDTO sender;
+    private Date createdAt;
 }

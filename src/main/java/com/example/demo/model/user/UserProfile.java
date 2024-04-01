@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_profiles")
+@Table(name = "user_profile")
 @Where(clause = "archived = false")
 public class UserProfile extends BaseModel {
     @Id
@@ -46,12 +46,6 @@ public class UserProfile extends BaseModel {
     @CollectionTable(name = "user_hobbies", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "hobby")
     private List<String> hobbies = new ArrayList<>();
-
-    @Column(name = "avatar_url")
-    private String avatarUrl;
-
-    @Column(name = "cover_url")
-    private String coverUrl;
 
     @OneToOne
     @MapsId

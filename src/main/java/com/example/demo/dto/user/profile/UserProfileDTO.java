@@ -22,6 +22,4 @@ public class UserProfileDTO {
     private String aboutMe;
     private String phoneNumber;
     private List<String> hobbies;
-    private String avatarUrl;
-    private String coverUrl;
 }

@@ -32,6 +32,11 @@ spring:
   data:
     rest:
       base-path: /api
+  servlet:
+    multipart:
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
 
 server:
   port: 8080
@@ -51,3 +56,8 @@ keycloak:
     roles: SUPER_ADMIN, ADMIN, USER
     defaultRole: USER
     token-life-span: ${KEYCLOAK_TOKEN_LIFE_SPAN}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}

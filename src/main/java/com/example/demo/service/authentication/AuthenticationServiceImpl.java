@@ -7,7 +7,10 @@ import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.model.user.User;
+import com.example.demo.model.user.UserAvatar;
+import com.example.demo.model.user.UserCover;
 import com.example.demo.model.user.UserProfile;
+import com.example.demo.repository.user.UserRepository;
 import com.example.demo.service.keycloak.KeycloakService;
 import com.example.demo.service.user.UserService;
 import jakarta.ws.rs.core.Response;
@@ -32,7 +35,7 @@ import java.util.*;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final KeycloakService keycloakService;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final String realmName = "linkwave";
 
     @Override
@@ -84,6 +87,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .id(UUID.fromString(userId))
                             .email(registerDTO.getEmail())
                             .isActive(true)
+                            .createdAt(new Date())
+                            .updatedAt(new Date())
                             .userProfile(UserProfile.builder().build())
                             .userSkills(Collections.emptyList())
                             .userExperiences(Collections.emptyList())
@@ -91,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .targetUserActivities(Collections.emptyList())
                             .sentNotifications(Collections.emptyList())
                             .receivedNotifications(Collections.emptyList())
-                            .albums(Collections.emptyList())
+                            .albumMedia(Collections.emptyList())
                             .sentFriendRequests(Collections.emptyList())
                             .receivedFriendRequests(Collections.emptyList())
                             .friendships(Collections.emptyList())
@@ -106,12 +111,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .build();
 
                     UserProfile userProfile = UserProfile.builder()
+                            .createdAt(new Date())
+                            .updatedAt(new Date())
+                            .user(userEntity)
+                            .build();
+
+                    UserAvatar userAvatar = UserAvatar.builder()
+                            .createdAt(new Date())
+                            .updatedAt(new Date())
+                            .user(userEntity)
+                            .build();
+
+                    UserCover userCover = UserCover.builder()
+                            .createdAt(new Date())
+                            .updatedAt(new Date())
                             .user(userEntity)
                             .build();
 
                     userEntity.setUserProfile(userProfile);
+                    userEntity.setUserAvatar(userAvatar);
+                    userEntity.setUserCover(userCover);
 
-                    userService.save(userEntity);
+                    userRepository.save(userEntity);
                     return ResponseDTO.builder()
                             .message("User registered successfully!")
                             .build();

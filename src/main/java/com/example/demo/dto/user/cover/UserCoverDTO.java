@@ -1,4 +1,4 @@
-package com.example.demo.dto.friendship;
+package com.example.demo.dto.user.cover;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,14 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class FriendShipDTO {
-    private UUID userId;
-    private UUID friendId;
+public class UserCoverDTO {
+    private String imageUrl;
+    private String imageId;
 }
