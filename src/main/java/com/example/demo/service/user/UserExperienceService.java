@@ -18,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +29,15 @@ public class UserExperienceService {
     private final String realmName = "linkwave";
     private final UserRepository userRepository;
     private final UserExperienceRepository userExperienceRepository;
+
+    public UserExperienceDTO getExperience(String id) {
+        Optional<UserExperience> userExperience = userExperienceRepository.findById(UUID.fromString(id));
+        if (userExperience.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.USER_EXPERIENCE_NOT_FOUND);
+        }
+
+        return UserExperienceMapper.INSTANCE.toDto(userExperience.get());
+    }
 
     public UserExperienceDTO createNewUserExperience(UserExperienceCreateDTO userExperienceCreateDTO) {
         UserDTO userDTO = keycloakService.getUserProfile(realmName);
@@ -47,6 +57,8 @@ public class UserExperienceService {
                 .location(userExperienceCreateDTO.getLocation())
                 .experienceType(ExperienceType.valueOf(userExperienceCreateDTO.getExperienceType()))
                 .user(user.get())
+                .createdAt(new Date())
+                .updatedAt(new Date())
                 .build();
         return UserExperienceMapper.INSTANCE.toDto(userExperienceRepository.save(userExperience));
     }
@@ -61,9 +73,13 @@ public class UserExperienceService {
     }
 
     public ResponseDTO updateUserExperience(String id, UserExperienceUpdateDTO userExperienceUpdateDTO) {
-        UserExperience userExperience = userExperienceRepository.findById(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
-        UserExperienceMapper.INSTANCE.mapUpdate(userExperience, userExperienceUpdateDTO);
-        userExperienceRepository.save(userExperience);
+        Optional<UserExperience> userExperience = userExperienceRepository.findById(UUID.fromString(id));
+        if (userExperience.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.USER_EXPERIENCE_NOT_FOUND);
+        }
+        UserExperienceMapper.INSTANCE.mapUpdate(userExperience.get(), userExperienceUpdateDTO);
+        userExperience.get().setUpdatedAt(new Date());
+        userExperienceRepository.save(userExperience.get());
         return ResponseDTO.builder()
                 .message("Update user experience successfully")
                 .build();

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)

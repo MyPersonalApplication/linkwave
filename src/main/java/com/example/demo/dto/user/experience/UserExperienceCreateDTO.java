@@ -1,11 +1,10 @@
 package com.example.demo.dto.user.experience;
 
-import com.example.demo.enums.ExperienceType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.sql.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor

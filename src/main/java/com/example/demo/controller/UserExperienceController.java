@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserExperienceController {
     private final UserExperienceService userExperienceService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserExperienceDTO> getOne(@PathVariable String id) {
+        return ResponseEntity.ok(userExperienceService.getExperience(id));
+    }
+
     @PostMapping
     public ResponseEntity<UserExperienceDTO> create(@RequestBody UserExperienceCreateDTO userExperienceCreateDTO) {
         return ResponseEntity.ok(userExperienceService.createNewUserExperience(userExperienceCreateDTO));

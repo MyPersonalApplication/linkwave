@@ -57,6 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return AuthenticationResponse.builder()
                     .accessTokenResponse(accessTokenResponse)
                     .roles(roles)
+                    .userId(userRepresentation.get().getId())
                     .build();
         } catch (AccessDeniedException ex) {
             throw ex;

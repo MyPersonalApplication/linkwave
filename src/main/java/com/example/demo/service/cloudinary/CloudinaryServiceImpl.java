@@ -24,9 +24,14 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     private final Cloudinary cloudinary;
 
     @Override
-    public Map uploadImage(MultipartFile multipartFile) throws IOException {
+    public Map uploadImage(MultipartFile multipartFile, String folderName) throws IOException {
         File file = convertMultiPartToFile(multipartFile);
-        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("folder", folderName); // Specify the folder
+
+        Map uploadResult = cloudinary.uploader().upload(file, params);
+
         if (!Files.deleteIfExists(file.toPath())) {
             log.error("Failed to delete file");
             throw new IOException("Failed to delete file: " + file.getAbsolutePath());

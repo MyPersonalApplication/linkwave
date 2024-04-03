@@ -20,6 +20,7 @@ import com.example.demo.service.cloudinary.CloudinaryService;
 import com.example.demo.service.keycloak.KeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,7 @@ public class UserService {
     private final UserExperienceRepository userExperienceRepository;
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
+    private final Environment environment;
 
     public UserDTO getCurrentProfile() {
         // Get user profile from keycloak
@@ -153,7 +155,8 @@ public class UserService {
         if (bi == null) {
             throw new InvalidDataException("Invalid image");
         }
-        Map result = cloudinaryService.uploadImage(multipartFile);
+        String[] activeProfiles = environment.getActiveProfiles();
+        Map result = cloudinaryService.uploadImage(multipartFile, activeProfiles[0] + "/avatar");
 
         // Update user avatar in cloudinary
         UserAvatarUpdateDTO userAvatarUpdateDTO = UserAvatarUpdateDTO.builder()
@@ -190,7 +193,8 @@ public class UserService {
         if (bi == null) {
             throw new InvalidDataException("Invalid image");
         }
-        Map result = cloudinaryService.uploadImage(multipartFile);
+        String[] activeProfiles = environment.getActiveProfiles();
+        Map result = cloudinaryService.uploadImage(multipartFile, activeProfiles[0] + "/cover");
 
         // Update user avatar in cloudinary
         UserCoverUpdateDTO userCoverUpdateDTO = UserCoverUpdateDTO.builder()
