@@ -156,7 +156,7 @@ public class UserService {
             throw new InvalidDataException("Invalid image");
         }
         String[] activeProfiles = environment.getActiveProfiles();
-        Map result = cloudinaryService.uploadImage(multipartFile, activeProfiles.length == 0 ? "prod" : activeProfiles[0] + "/avatar");
+        Map result = cloudinaryService.uploadImage(multipartFile, (activeProfiles.length == 0 ? "prod" : activeProfiles[0]) + "/avatar");
 
         // Update user avatar in cloudinary
         UserAvatarUpdateDTO userAvatarUpdateDTO = UserAvatarUpdateDTO.builder()
@@ -194,7 +194,7 @@ public class UserService {
             throw new InvalidDataException("Invalid image");
         }
         String[] activeProfiles = environment.getActiveProfiles();
-        Map result = cloudinaryService.uploadImage(multipartFile, activeProfiles.length == 0 ? "prod" : activeProfiles[0] + "/cover");
+        Map result = cloudinaryService.uploadImage(multipartFile, (activeProfiles.length == 0 ? "prod" : activeProfiles[0]) + "/cover");
 
         // Update user avatar in cloudinary
         UserCoverUpdateDTO userCoverUpdateDTO = UserCoverUpdateDTO.builder()
