@@ -16,6 +16,7 @@ public interface FriendRequestMapper {
     FriendRequestMapper INSTANCE = Mappers.getMapper(FriendRequestMapper.class);
 
     @Mapping(target = "sender.avatar", source = "sender.userAvatar")
+    @Mapping(target = "receiver.avatar", source = "receiver.userAvatar")
     FriendRequestDTO toDto(FriendRequest friendRequest);
 
     List<FriendRequestDTO> toDtos(List<FriendRequest> friendRequestList);

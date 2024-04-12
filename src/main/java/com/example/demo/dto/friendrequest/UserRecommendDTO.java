@@ -1,5 +1,6 @@
 package com.example.demo.dto.friendrequest;
 
+import com.example.demo.dto.user.avatar.UserAvatarDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class AcceptRequestDTO {
-    private UUID requestId;
+public class UserRecommendDTO {
+    private UUID id;
+    private String firstName;
+    private String lastName;
+    private UserAvatarDTO avatar;
 }

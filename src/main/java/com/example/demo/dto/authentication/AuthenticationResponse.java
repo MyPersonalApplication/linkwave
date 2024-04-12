@@ -1,5 +1,6 @@
 package com.example.demo.dto.authentication;
 
+import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-    AccessTokenResponse accessTokenResponse;
-    List<String> roles;
-    String userId;
+    private AccessTokenResponse accessTokenResponse;
+    private List<String> roles;
+    private UserDTO user;
 }

@@ -18,6 +18,7 @@ import java.util.UUID;
 @SuperBuilder
 public class FriendRequestDTO {
     private UUID id;
-    private UserDTO sender;
+    private UserRecommendDTO sender;
+    private UserRecommendDTO receiver;
     private Date createdAt;
 }

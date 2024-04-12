@@ -2,8 +2,13 @@ package com.example.demo.service.keycloak;
 
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.controller.exception.NotFoundException;
+import com.example.demo.dto.friendrequest.RecommendDTO;
+import com.example.demo.dto.friendrequest.UserRecommendDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
+import com.example.demo.model.friend.Friendship;
+import com.example.demo.model.user.User;
+import com.example.demo.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -35,6 +40,7 @@ public class KeycloakService {
 
     private final TokenHandler tokenHandler;
     private final Keycloak keycloak;
+    private final UserRepository userRepository;
 
     public KeycloakBuilder newKeycloakBuilderWithPasswordCredentials(String username, String password, String realm) {
         return KeycloakBuilder.builder()
@@ -121,5 +127,44 @@ public class KeycloakService {
         });
 
         return userProfileMap;
+    }
+
+    public Map<String, RecommendDTO> getUserRecommendByIds(String realmName, List<String> userIds) {
+        UsersResource users = keycloak.realm(realmName).users();
+
+        String email = tokenHandler.getUsername();
+        List<UserRepresentation> userRepresentations = users.searchByEmail(email, true);
+        String currentUserId = userRepresentations.get(0).getId();
+
+        Map<String, RecommendDTO> userProfileMap = new HashMap<>();
+        userIds.forEach(userId -> {
+            try {
+                UserRepresentation userRepresentation = users.get(userId).toRepresentation();
+                Optional<User> user = userRepository.findById(UUID.fromString(userId));
+                UUID requestId = !user.get().getReceivedFriendRequests().isEmpty() ? user.get().getReceivedFriendRequests().get(0).getId() : null;
+                if (requestId == null) {
+                    requestId = !user.get().getSentFriendRequests().isEmpty() ? user.get().getSentFriendRequests().get(0).getId() : null;
+                }
+                boolean isFriend = checkIsFriend(user.get().getFriendships(), UUID.fromString(userId), UUID.fromString(currentUserId));
+                UserRecommendDTO userRecommendDTO = UserRecommendDTO.builder()
+                        .id(UUID.fromString(userId))
+                        .firstName(userRepresentation.getFirstName())
+                        .lastName(userRepresentation.getLastName())
+                        .build();
+                userProfileMap.put(userId, RecommendDTO.builder()
+                        .user(userRecommendDTO)
+                        .requestId(requestId)
+                        .isFriend(isFriend)
+                        .build());
+            } catch (Exception e) {
+                userProfileMap.put(userId, null);
+            }
+        });
+
+        return userProfileMap;
+    }
+
+    private boolean checkIsFriend(List<Friendship> friendships, UUID friendId, UUID currentUserId) {
+        return friendships.stream().anyMatch(friendship -> friendship.getUser().getId().equals(friendId) && friendship.getFriend().getId().equals(currentUserId));
     }
 }

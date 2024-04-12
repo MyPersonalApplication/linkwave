@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.friendrequest.AcceptRequestDTO;
 import com.example.demo.dto.friendrequest.FriendRequestDTO;
+import com.example.demo.dto.friendrequest.RecommendDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
 import com.example.demo.dto.ResponseDTO;
-import com.example.demo.dto.friendrequest.RejectRequestDTO;
+import com.example.demo.dto.user.UserDTO;
 import com.example.demo.service.friendrequest.FriendRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +15,35 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/friend-request")
+@RequestMapping("/api/friends")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
 public class FriendRequestController {
     private final FriendRequestService friendRequestService;
 
-    @GetMapping
-    public ResponseEntity<List<FriendRequestDTO>> getFriendRequests() {
-        List<FriendRequestDTO> friendRequestDTO = friendRequestService.getFriendRequests();
+    @GetMapping("/requests")
+    public ResponseEntity<List<FriendRequestDTO>> getFriendRequests(
+            @RequestParam(required = false, defaultValue = "-1") int limit
+    ) {
+        List<FriendRequestDTO> friendRequestDTO = friendRequestService.getFriendRequests(limit);
         return ResponseEntity.ok(friendRequestDTO);
     }
 
-    @PostMapping()
+    @DeleteMapping("/delete/{requestId}")
+    public ResponseEntity<ResponseDTO> deleteFriendRequest(@PathVariable UUID requestId) {
+        ResponseDTO responseDTO = friendRequestService.deleteFriendRequest(requestId);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/recommends")
+    public ResponseEntity<List<RecommendDTO>> getRecommendedFriends(
+            @RequestParam(required = false, defaultValue = "-1") int limit
+    ) {
+        List<RecommendDTO> recommendedFriends = friendRequestService.getRecommendedFriends(limit);
+        return ResponseEntity.ok(recommendedFriends);
+    }
+
+    @PostMapping("/send")
     public ResponseEntity<ResponseDTO> sendFriendRequest(@RequestBody SendRequestDTO sendRequestDTO) {
         ResponseDTO responseDTO = friendRequestService.sendFriendRequest(sendRequestDTO);
         return ResponseEntity.ok(responseDTO);

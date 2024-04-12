@@ -1,5 +1,6 @@
 package com.example.demo.dto.friendrequest;
 
+import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class RejectRequestDTO {
+public class RecommendDTO {
+    private UserRecommendDTO user;
     private UUID requestId;
+    private FriendRequestDTO request;
+    private boolean isFriend;
 }
