@@ -7,7 +7,7 @@ import com.example.demo.dto.friendrequest.FriendRequestDTO;
 import com.example.demo.dto.friendrequest.RecommendDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
 import com.example.demo.dto.friendrequest.UserRecommendDTO;
-import com.example.demo.dto.friendship.FriendShipDTO;
+import com.example.demo.dto.friendship.FriendShipCreateDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.dto.user.avatar.UserAvatarDTO;
 import com.example.demo.enums.ErrorMessage;
@@ -217,7 +217,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
         // Accept friend request
         // Add friend to user's friend list
-        FriendShipDTO addFriendToFriendListDTO = FriendShipDTO.builder()
+        FriendShipCreateDTO addFriendToFriendListDTO = FriendShipCreateDTO.builder()
                 .userId(friendRequest.get().getReceiver().getId())
                 .friendId(friendRequest.get().getSender().getId())
                 .build();
@@ -227,7 +227,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         friendShipRepository.save(addFriendToFriendList);
 
         // Add user to friend's friend list
-        FriendShipDTO addUserToFriendListDTO = FriendShipDTO.builder()
+        FriendShipCreateDTO addUserToFriendListDTO = FriendShipCreateDTO.builder()
                 .userId(friendRequest.get().getSender().getId())
                 .friendId(friendRequest.get().getReceiver().getId())
                 .build();

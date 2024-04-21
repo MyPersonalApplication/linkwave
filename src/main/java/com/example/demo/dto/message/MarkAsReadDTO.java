@@ -1,12 +1,12 @@
-package com.example.demo.dto.friendship;
+package com.example.demo.dto.message;
 
-import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class FriendShipDTO {
-    private UUID id;
-    private UserDTO user;
+public class MarkAsReadDTO {
+    private List<UUID> listMessageIds;
 }

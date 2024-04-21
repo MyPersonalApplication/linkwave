@@ -1,5 +1,6 @@
-package com.example.demo.dto.friendship;
+package com.example.demo.dto.participant;
 
+import com.example.demo.dto.conversation.ConversationDTO;
 import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class FriendShipDTO {
+public class ParticipantDTO {
     private UUID id;
+    private ConversationDTO conversation;
     private UserDTO user;
 }

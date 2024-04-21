@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,6 +30,9 @@ public class Message extends BaseModel {
     @Column
     private String content;
 
+    @Column(name = "is_read", columnDefinition = "boolean default false")
+    private Boolean isRead;
+
     @ManyToOne
     @JoinColumn(name = "conversation_id", nullable = false)
     private Conversation conversation;
@@ -38,8 +42,5 @@ public class Message extends BaseModel {
     private User sender;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
-    private Set<Receipt> receipts;
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
-    private Set<MessageAttachment> attachments;
+    private List<MessageAttachment> attachments;
 }

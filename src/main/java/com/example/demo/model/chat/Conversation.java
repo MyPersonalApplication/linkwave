@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,8 +30,8 @@ public class Conversation extends BaseModel {
     private String name;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Message> messages;
+    private List<Message> messages;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Participant> participants;
+    private List<Participant> participants;
 }

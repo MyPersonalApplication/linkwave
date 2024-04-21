@@ -20,6 +20,7 @@ import com.example.demo.repository.user.UserAvatarRepository;
 import com.example.demo.repository.user.UserCoverRepository;
 import com.example.demo.repository.user.UserRepository;
 import com.example.demo.service.keycloak.KeycloakService;
+import com.example.demo.service.user.UserService;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,7 @@ import java.util.*;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final KeycloakService keycloakService;
     private final UserRepository userRepository;
-    private final UserAvatarRepository userAvatarRepository;
-    private final UserCoverRepository userCoverRepository;
+    private final UserService userService;
     private final String realmName = "linkwave";
 
     @Override
@@ -63,26 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             List<String> roles = userResource.roles().realmLevel().listEffective().stream()
                     .map(RoleRepresentation::getName).map(role -> "ROLE_" + role).toList();
 
-            // Get user avatar and cover from database
-            Optional<UserAvatar> userAvatar = Optional.ofNullable(userAvatarRepository.findByUserId(UUID.fromString(userRepresentation.get().getId())));
-            if (userAvatar.isEmpty()) {
-                throw new NotFoundException(ErrorMessage.USER_AVATAR_NOT_FOUND);
-            }
-            UserAvatarDTO userAvatarDTO = UserAvatarMapper.INSTANCE.toDto(userAvatar.get());
-
-            Optional<UserCover> userCover = Optional.ofNullable(userCoverRepository.findByUserId(UUID.fromString(userRepresentation.get().getId())));
-            if (userCover.isEmpty()) {
-                throw new NotFoundException(ErrorMessage.USER_COVER_NOT_FOUND);
-            }
-            UserCoverDTO userCoverDTO = UserCoverMapper.INSTANCE.toDto(userCover.get());
-
-            UserDTO userDTO = UserDTO.builder()
-                    .id(UUID.fromString(userRepresentation.get().getId()))
-                    .firstName(userRepresentation.get().getFirstName())
-                    .lastName(userRepresentation.get().getLastName())
-                    .avatar(userAvatarDTO)
-                    .cover(userCoverDTO)
-                    .build();
+            UserDTO userDTO = userService.getProfileByUserId(userRepresentation.get().getId());
 
             return AuthenticationResponse.builder()
                     .accessTokenResponse(accessTokenResponse)
@@ -134,7 +115,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .friendOfFriendships(Collections.emptyList())
                             .messages(Collections.emptyList())
                             .participants(Collections.emptyList())
-                            .receipts(Collections.emptyList())
                             .posts(Collections.emptyList())
                             .postComments(Collections.emptyList())
                             .replyComments(Collections.emptyList())

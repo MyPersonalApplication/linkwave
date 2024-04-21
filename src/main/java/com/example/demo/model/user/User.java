@@ -6,7 +6,6 @@ import com.example.demo.model.BaseModel;
 import com.example.demo.model.Notification;
 import com.example.demo.model.chat.Message;
 import com.example.demo.model.chat.Participant;
-import com.example.demo.model.chat.Receipt;
 import com.example.demo.model.friend.FriendRequest;
 import com.example.demo.model.friend.Friendship;
 import com.example.demo.model.interact.LikeComment;
@@ -102,10 +101,6 @@ public class User extends BaseModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Participant> participants;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Receipt> receipts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
