@@ -11,5 +11,6 @@ public interface ConversationMapper {
     ConversationMapper INSTANCE = Mappers.getMapper(ConversationMapper.class);
 
     @Mapping(target = "messages", ignore = true)
+    @Mapping(target = "participants", ignore = true)
     ConversationDTO toDto(Conversation conversation);
 }

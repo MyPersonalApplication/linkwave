@@ -16,8 +16,6 @@ public interface MessageMapper {
     @Mapping(target = "conversation", ignore = true)
     MessageDTO toDto(Message message);
 
-    List<MessageDTO> toDtos(List<Message> messages);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "conversation.id", source = "conversationId")
     @Mapping(target = "sender.id", source = "senderId")

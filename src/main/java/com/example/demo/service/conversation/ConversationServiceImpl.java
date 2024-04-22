@@ -1,6 +1,7 @@
 package com.example.demo.service.conversation;
 
 import com.example.demo.config.authentication.TokenHandler;
+import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.conversation.ConversationDTO;
 import com.example.demo.dto.conversation.CreateConversationDTO;
@@ -8,6 +9,7 @@ import com.example.demo.dto.friendship.FriendShipDTO;
 import com.example.demo.dto.message.MessageDTO;
 import com.example.demo.dto.participant.CreateParticipantDTO;
 import com.example.demo.dto.participant.ParticipantDTO;
+import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.ConversationMapper;
 import com.example.demo.mapper.MessageMapper;
 import com.example.demo.mapper.ParticipantMapper;
@@ -20,6 +22,7 @@ import com.example.demo.repository.MessageRepository;
 import com.example.demo.repository.ParticipantRepository;
 import com.example.demo.service.keycloak.KeycloakService;
 import com.example.demo.service.message.MessageService;
+import com.example.demo.service.participant.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,7 @@ public class ConversationServiceImpl implements ConversationService {
     private final ConversationRepository conversationRepository;
     private final ParticipantRepository participantRepository;
     private final MessageService messageService;
-    private final MessageRepository messageRepository;
+    private final ParticipantService participantService;
 
     @Override
     public ConversationDTO createConversation(UUID friendId) {
@@ -86,7 +89,9 @@ public class ConversationServiceImpl implements ConversationService {
         List<ConversationDTO> conversationDTOS = participants.stream().map(Participant::getConversation).map(ConversationMapper.INSTANCE::toDto).toList();
 
         conversationDTOS.forEach(conversationDTO -> {
+            List<ParticipantDTO> participantDTOS = participantService.getParticipants(conversationDTO.getId());
             List<MessageDTO> messageDTOS = messageService.getMessages(conversationDTO.getId());
+            conversationDTO.setParticipants(participantDTOS);
             conversationDTO.setMessages(messageDTOS);
         });
 
@@ -95,9 +100,12 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public ConversationDTO getConversation(UUID conversationId) {
-        Conversation conversation = conversationRepository.findById(conversationId).orElseThrow();
+        Conversation conversation = conversationRepository.findById(conversationId).orElseThrow(() -> new NotFoundException(ErrorMessage.CONVERSATION_NOT_FOUND));
         ConversationDTO conversationDTO = ConversationMapper.INSTANCE.toDto(conversation);
+
+        conversationDTO.setParticipants(participantService.getParticipants(conversationId));
         conversationDTO.setMessages(messageService.getMessages(conversationId));
+
         return conversationDTO;
     }
 }

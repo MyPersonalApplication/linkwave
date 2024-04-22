@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseDTO;
-import com.example.demo.dto.conversation.ConversationDTO;
 import com.example.demo.dto.message.CreateMessageDTO;
 import com.example.demo.dto.message.MarkAsReadDTO;
 import com.example.demo.dto.message.MessageDTO;
@@ -10,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/messages")

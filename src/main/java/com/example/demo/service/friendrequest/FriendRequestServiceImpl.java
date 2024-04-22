@@ -136,13 +136,24 @@ public class FriendRequestServiceImpl implements FriendRequestService {
                 value.setRequest(friendRequestDTO);
             }
 
-            RecommendDTO recommendDTO = RecommendDTO.builder()
-                    .user(userRecommendDTO)
-                    .requestId(value.getRequestId())
-                    .request(value.getRequest())
-                    .isFriend(value.isFriend())
-                    .build();
+            RecommendDTO recommendDTO;
+            if (value.getRequest() != null && (value.getRequest().getSender().getId().equals(userId) || value.getRequest().getReceiver().getId().equals(userId))) {
+                recommendDTO = RecommendDTO.builder()
+                        .user(userRecommendDTO)
+                        .requestId(value.getRequestId())
+                        .request(value.getRequest())
+                        .isFriend(value.isFriend())
+                        .build();
 
+            } else {
+                recommendDTO = RecommendDTO.builder()
+                        .user(userRecommendDTO)
+                        .requestId(null)
+                        .request(null)
+                        .isFriend(value.isFriend())
+                        .build();
+
+            }
             recommendDTOS.add(recommendDTO);
         });
 

@@ -10,6 +10,8 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
+    @Mapping(target = "firstName", ignore = true)
+    @Mapping(target = "lastName", ignore = true)
     @Mapping(target = "profile", source = "userProfile")
     @Mapping(target = "avatar", source = "userAvatar")
     @Mapping(target = "cover", source = "userCover")

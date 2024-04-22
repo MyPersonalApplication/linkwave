@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.model.chat.Message;
 import com.example.demo.model.chat.Participant;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,9 @@ public interface ParticipantRepository extends BaseRepository<Participant>, JpaS
             """)
     Participant isExistConversation(UUID friend, UUID userId);
 
-    @Query("select p from Participant p where p.user.id = ?1")
+    @Query("select m from Participant m where m.conversation.id = ?1")
+    List<Participant> findByConversationId(UUID conversationId);
+
+    @Query("select p from Participant p where p.user.id = ?1 order by p.conversation.updatedAt desc")
     List<Participant> findByUserId(UUID userId);
 }

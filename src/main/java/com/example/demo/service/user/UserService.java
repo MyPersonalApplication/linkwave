@@ -98,6 +98,17 @@ public class UserService {
         return userDTO;
     }
 
+    public UserDTO buildUserDTO(UUID userId) {
+        UserDTO userDTO = keycloakService.getUserProfileById(realmName, String.valueOf(userId));
+        Optional<UserAvatar> userAvatar = Optional.ofNullable(userAvatarRepository.findByUserId(userId));
+        if (userAvatar.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.USER_AVATAR_NOT_FOUND);
+        }
+        UserAvatarDTO userAvatarDTO = UserAvatarMapper.INSTANCE.toDto(userAvatar.get());
+        userDTO.setAvatar(userAvatarDTO);
+        return userDTO;
+    }
+
     public User loadUserByUsername(String username) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(username));
         if (user.isEmpty()) {

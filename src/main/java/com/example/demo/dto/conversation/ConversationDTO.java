@@ -1,6 +1,7 @@
 package com.example.demo.dto.conversation;
 
 import com.example.demo.dto.message.MessageDTO;
+import com.example.demo.dto.participant.ParticipantDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class ConversationDTO {
     private UUID id;
     private String name;
+    private List<ParticipantDTO> participants;
     private List<MessageDTO> messages;
     private Date createdAt;
 }
