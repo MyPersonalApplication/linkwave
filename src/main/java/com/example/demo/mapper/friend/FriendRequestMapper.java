@@ -2,7 +2,6 @@ package com.example.demo.mapper.friend;
 
 import com.example.demo.dto.friendrequest.FriendRequestDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
-import com.example.demo.mapper.decorator.FriendRequestMapperDecorator;
 import com.example.demo.model.friend.FriendRequest;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;

@@ -2,6 +2,7 @@ package com.example.demo.service.kafka;
 
 import com.example.demo.dto.message.MessageDTO;
 import com.example.demo.service.message.MessageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -9,12 +10,10 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class KafkaListeners {
-    @Autowired
-    private WebSocketMessageBroadcaster broadcaster;
-
-    @Autowired
-    private MessageService messageService;
+    private final WebSocketMessageBroadcaster broadcaster;
+    private final MessageService messageService;
 
     @KafkaListener(
             topics = "linkwave",

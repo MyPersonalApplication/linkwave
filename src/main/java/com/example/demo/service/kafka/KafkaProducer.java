@@ -7,10 +7,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class KafkaProducer {
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private static final String TOPIC_NAME = "linkwave";
 
     public void sendMessage(String message) {
