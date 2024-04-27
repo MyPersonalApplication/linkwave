@@ -3,21 +3,16 @@ package com.example.demo.service.message;
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
-import com.example.demo.dto.friendrequest.UserRecommendDTO;
 import com.example.demo.dto.message.CreateMessageDTO;
 import com.example.demo.dto.message.MessageDTO;
 import com.example.demo.dto.user.UserDTO;
-import com.example.demo.dto.user.avatar.UserAvatarDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.MessageMapper;
-import com.example.demo.mapper.user.UserAvatarMapper;
 import com.example.demo.model.chat.Conversation;
 import com.example.demo.model.chat.Message;
-import com.example.demo.model.user.UserAvatar;
 import com.example.demo.repository.ConversationRepository;
 import com.example.demo.repository.MessageRepository;
-import com.example.demo.repository.user.UserAvatarRepository;
-import com.example.demo.service.keycloak.KeycloakService;
+import com.example.demo.service.kafka.KafkaProducer;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +31,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final ConversationRepository conversationRepository;
     private final UserService userService;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public MessageDTO createMessage(CreateMessageDTO createMessageDTO) {
@@ -59,9 +55,10 @@ public class MessageServiceImpl implements MessageService {
         conversationRepository.save(conversation);
 
         // Get message dto
-        UserDTO userDTO = userService.buildUserDTO(userId);
-        MessageDTO messageDTO = MessageMapper.INSTANCE.toDto(message);
-        messageDTO.setSender(userDTO);
+        MessageDTO messageDTO = getMessage(message.getId());
+
+        // Send message to kafka
+        kafkaProducer.sendMessage(messageDTO.getId().toString());
 
         return messageDTO;
     }
@@ -80,13 +77,33 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public MessageDTO getMessage(UUID messageId) {
+        // Get user id from token
+        UUID userId = tokenHandler.getUserId();
+
+        // Get message
+        Optional<Message> message = messageRepository.findById(messageId);
+
+        if (message.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.MESSAGE_NOT_FOUND);
+        }
+
+        UserDTO userDTO = userService.buildUserDTO(userId);
+        MessageDTO messageDTO = MessageMapper.INSTANCE.toDto(message.get());
+        messageDTO.setSender(userDTO);
+
+        return messageDTO;
+    }
+
+    @Override
     public List<MessageDTO> getMessages(UUID conversationId) {
         // Get list of messages
         List<Message> messages = messageRepository.findByConversationId(conversationId);
         List<MessageDTO> messageDTOS = messages.stream().map(MessageMapper.INSTANCE::toDto).toList();
 
         messageDTOS.forEach(messageDTO -> {
-            UserDTO userDTO = userService.buildUserDTO(messageDTO.getSender().getId());
+            UUID userId = messageDTO.getSender().getId();
+            UserDTO userDTO = userService.buildUserDTO(userId);
             messageDTO.setSender(userDTO);
         });
 

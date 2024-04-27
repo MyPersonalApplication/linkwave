@@ -13,5 +13,7 @@ public interface MessageService {
 
     ResponseDTO markAsRead(List<UUID> listMessageIds);
 
+    MessageDTO getMessage(UUID messageId);
+
     List<MessageDTO> getMessages(UUID conversationId);
 }

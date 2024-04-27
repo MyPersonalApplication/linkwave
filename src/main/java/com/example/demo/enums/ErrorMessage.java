@@ -17,6 +17,7 @@ public class ErrorMessage {
     public static final String FRIEND_REQUEST_ALREADY_EXISTS = "FRIEND_REQUEST_ALREADY_EXISTS";
     public static final String FRIEND_REQUEST_NOT_FOUND = "FRIEND_REQUEST_NOT_FOUND";
     public static final String CONVERSATION_NOT_FOUND = "CONVERSATION_NOT_FOUND";
+    public static final String MESSAGE_NOT_FOUND = "MESSAGE_NOT_FOUND";
 
     private ErrorMessage() {
     }

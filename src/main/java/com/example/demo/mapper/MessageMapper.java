@@ -13,7 +13,7 @@ import java.util.List;
 public interface MessageMapper {
     MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);
 
-    @Mapping(target = "conversation", ignore = true)
+    @Mapping(target = "conversationId", source = "conversation.id")
     MessageDTO toDto(Message message);
 
     @Mapping(target = "id", ignore = true)

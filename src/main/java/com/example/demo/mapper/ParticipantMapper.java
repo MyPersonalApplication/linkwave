@@ -18,6 +18,6 @@ public interface ParticipantMapper {
     @Mapping(target = "user.id", source = "userId")
     Participant mapFromCreate(CreateParticipantDTO createParticipantDTO);
 
-    @Mapping(target = "conversation", ignore = true)
+    @Mapping(target = "conversationId", source = "conversation.id")
     ParticipantDTO toDto(Participant participant);
 }

@@ -17,6 +17,6 @@ import java.util.UUID;
 @SuperBuilder
 public class ParticipantDTO {
     private UUID id;
-    private ConversationDTO conversation;
+    private UUID conversationId;
     private UserDTO user;
 }

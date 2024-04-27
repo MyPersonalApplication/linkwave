@@ -86,7 +86,9 @@ public class ConversationServiceImpl implements ConversationService {
         UUID userId = tokenHandler.getUserId();
 
         List<Participant> participants = participantRepository.findByUserId(userId);
-        List<ConversationDTO> conversationDTOS = participants.stream().map(Participant::getConversation).map(ConversationMapper.INSTANCE::toDto).toList();
+
+        List<Conversation> conversations = participants.stream().map(Participant::getConversation).toList();
+        List<ConversationDTO> conversationDTOS = conversations.stream().map(ConversationMapper.INSTANCE::toDto).toList();
 
         conversationDTOS.forEach(conversationDTO -> {
             List<ParticipantDTO> participantDTOS = participantService.getParticipants(conversationDTO.getId());

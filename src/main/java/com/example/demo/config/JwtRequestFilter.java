@@ -94,14 +94,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
     }
 
-    private void isTokenExpired(Jwt jwt) {
+    public void isTokenExpired(Jwt jwt) {
         Instant expiration = Instant.ofEpochMilli(Long.parseLong(jwt.getClaims().get("exp").toString()) * 1000);
         if (Instant.now().isAfter(expiration)) {
             throw new ExpiredJwtException(null, null, "TOKEN_EXPIRED");
         }
     }
 
-    private Jwt decodeJwt(String jwtString) throws JsonProcessingException {
+    public Jwt decodeJwt(String jwtString) throws JsonProcessingException {
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String[] chunks = jwtString.split("\\.");
         String headerString = new String(decoder.decode(chunks[0]));
