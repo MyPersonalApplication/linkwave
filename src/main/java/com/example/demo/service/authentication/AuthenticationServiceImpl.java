@@ -2,10 +2,12 @@ package com.example.demo.service.authentication;
 
 import com.example.demo.controller.exception.AuthenticationException;
 import com.example.demo.controller.exception.ConflictingDataException;
+import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.enums.CredentialResetAction;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.model.user.User;
 import com.example.demo.model.user.UserAvatar;
@@ -150,6 +152,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
         } catch (Exception e) {
             throw new ConflictingDataException("Failed to register user");
+        }
+    }
+
+    @Override
+    public void resetPassword(String email) {
+        RealmResource realmResource = keycloakService.getRealmResource(realmName);
+        UsersResource usersResource = realmResource.users();
+        var user = getUserRepresentationByEmail(email);
+        usersResource.get(user.getId()).executeActionsEmail(
+                List.of(CredentialResetAction.UPDATE_PASSWORD.name()));
+    }
+
+    @Override
+    public void resendVerificationEmail(String email) {
+        RealmResource realmResource = keycloakService.getRealmResource(realmName);
+        var user = getUserRepresentationByEmail(email);
+        UsersResource usersResource = realmResource.users();
+        usersResource.get(user.getId()).sendVerifyEmail();
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword) {
+        keycloakService.changePassword(oldPassword, newPassword, realmName);
+    }
+
+    private UserRepresentation getUserRepresentationByEmail(String email) {
+        try {
+            RealmResource realmResource = keycloakService.getRealmResource(realmName);
+            return realmResource.users().search(email).get(0);
+        } catch (Exception ex) {
+            throw new NotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
     }
 

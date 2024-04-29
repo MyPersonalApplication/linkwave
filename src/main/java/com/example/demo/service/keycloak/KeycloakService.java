@@ -15,6 +15,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
@@ -61,6 +62,30 @@ public class KeycloakService {
 
     public RealmResource getRealmResource(String realm) {
         return keycloak.realm(realm);
+    }
+
+    public void changePassword(String oldPassword, String newPassword, String realm) {
+        UsersResource users = keycloak.realm(realm).users();
+        List<UserRepresentation> userRepresentations = users.searchByEmail(tokenHandler.getUsername(), true);
+        String userId = userRepresentations.get(0).getId();
+        if (!passwordMatched(oldPassword, realm)) {
+            throw new AccessDeniedException(ErrorMessage.INCORRECT_OLD_PASSWORD);
+        }
+        CredentialRepresentation passwordCred = new CredentialRepresentation();
+        passwordCred.setTemporary(false);
+        passwordCred.setType(CredentialRepresentation.PASSWORD);
+        passwordCred.setValue(newPassword);
+        users.get(userId).resetPassword(passwordCred);
+    }
+
+    public boolean passwordMatched(String oldPassword, String realm) {
+        try {
+            Keycloak keycloakCredential = newKeycloakBuilderWithPasswordCredentials(tokenHandler.getUsername(), oldPassword, realm).build();
+            keycloakCredential.tokenManager().getAccessToken();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public UserDTO getUserProfile(String realmName) {

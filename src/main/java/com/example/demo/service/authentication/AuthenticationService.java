@@ -10,4 +10,10 @@ public interface AuthenticationService {
     AuthenticationResponse authenticate(String username, String password);
 
     ResponseDTO registerNewUser(RegisterDTO registerDTO);
+
+    void resetPassword(String email);
+
+    void resendVerificationEmail(String email);
+
+    void changePassword(String oldPassword, String newPassword);
 }
