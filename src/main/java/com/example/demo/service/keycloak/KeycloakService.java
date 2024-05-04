@@ -66,7 +66,8 @@ public class KeycloakService {
 
     public void changePassword(String oldPassword, String newPassword, String realm) {
         UsersResource users = keycloak.realm(realm).users();
-        List<UserRepresentation> userRepresentations = users.searchByEmail(tokenHandler.getUsername(), true);
+        String email = tokenHandler.getUsername();
+        List<UserRepresentation> userRepresentations = users.searchByEmail(email, true);
         String userId = userRepresentations.get(0).getId();
         if (!passwordMatched(oldPassword, realm)) {
             throw new AccessDeniedException(ErrorMessage.INCORRECT_OLD_PASSWORD);

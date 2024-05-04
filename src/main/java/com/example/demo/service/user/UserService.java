@@ -43,6 +43,13 @@ public class UserService {
     private final CloudinaryService cloudinaryService;
     private final Environment environment;
 
+    public ResponseDTO changePassword(String oldPassword, String newPassword) {
+        keycloakService.changePassword(oldPassword, newPassword, realmName);
+        return ResponseDTO.builder()
+                .message("Change password successfully")
+                .build();
+    }
+
     public UserDTO getCurrentProfile() {
         // Get user profile from keycloak
         UserDTO userDTO = keycloakService.getUserProfile(realmName);

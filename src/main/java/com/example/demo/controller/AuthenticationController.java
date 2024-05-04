@@ -38,11 +38,6 @@ public class AuthenticationController {
         authenticationService.resetPassword(email);
     }
 
-    @PostMapping(value = "/change-password")
-    public void changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
-        authenticationService.changePassword(changePasswordDTO.getOldPassword(), changePasswordDTO.getNewPassword());
-    }
-
     @PostMapping(value = "/resend-verification-email")
     public void resendVerificationEmail(@RequestBody String email) {
         authenticationService.resendVerificationEmail(email);

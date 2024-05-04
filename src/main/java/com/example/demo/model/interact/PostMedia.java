@@ -24,11 +24,11 @@ public class PostMedia extends BaseModel {
     @GeneratedValue
     private UUID id;
 
-    @Column
-    private String url;
+    @Column(name = "media_url")
+    private String mediaUrl;
 
-    @Column
-    private String caption;
+    @Column(name = "media_id")
+    private String mediaId;
 
     @Column(name = "is_video")
     private Boolean isVideo;

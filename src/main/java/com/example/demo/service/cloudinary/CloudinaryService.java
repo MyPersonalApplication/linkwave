@@ -9,6 +9,6 @@ import java.util.Map;
 public interface CloudinaryService {
     Map uploadImage(MultipartFile multipartFile, String folderName) throws IOException;
     Map deleteImage(String id) throws IOException;
-    Map uploadVideo(MultipartFile multipartFile);
+    Map uploadVideo(MultipartFile multipartFile, String folderName) throws IOException;
     File convertMultiPartToFile(MultipartFile multipartFile) throws IOException;
 }

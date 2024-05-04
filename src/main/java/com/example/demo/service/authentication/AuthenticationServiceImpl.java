@@ -172,11 +172,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         usersResource.get(user.getId()).sendVerifyEmail();
     }
 
-    @Override
-    public void changePassword(String oldPassword, String newPassword) {
-        keycloakService.changePassword(oldPassword, newPassword, realmName);
-    }
-
     private UserRepresentation getUserRepresentationByEmail(String email) {
         try {
             RealmResource realmResource = keycloakService.getRealmResource(realmName);

@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserSkillRepository extends BaseRepository<UserSkill>, JpaSpecificationExecutor<UserSkill> {
-    @Query("select us from UserSkill us where us.user.id = ?1")
+    @Query("select us from UserSkill us where us.user.id = ?1 order by us.createdAt desc")
     List<UserSkill> findByUserId(UUID userId);
 }

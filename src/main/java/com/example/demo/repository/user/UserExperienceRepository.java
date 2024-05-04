@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserExperienceRepository extends BaseRepository<UserExperience>, JpaSpecificationExecutor<UserExperience> {
-    @Query("select ue from UserExperience ue where ue.user.id = ?1")
+    @Query("select ue from UserExperience ue where ue.user.id = ?1 order by ue.createdAt desc")
     List<UserExperience> findByUserId(UUID userId);
 }

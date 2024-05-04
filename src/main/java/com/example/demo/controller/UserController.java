@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseDTO;
+import com.example.demo.dto.authentication.ChangePasswordDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.dto.user.UserUpdateDTO;
 import com.example.demo.dto.user.experience.UserExperienceCreateDTO;
@@ -29,6 +30,12 @@ public class UserController {
     private final UserService userService;
     private final UserExperienceService userExperienceService;
     private final UserSkillService userSkillService;
+
+    @PostMapping(value = "/change-password")
+    public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        ResponseDTO responseDTO = userService.changePassword(changePasswordDTO.getOldPassword(), changePasswordDTO.getNewPassword());
+        return ResponseEntity.ok(responseDTO);
+    }
 
     @GetMapping(value = "/profile/me")
     public ResponseEntity<UserDTO> getCurrentProfile() {

@@ -45,8 +45,20 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public Map uploadVideo(MultipartFile multipartFile) {
-        return null;
+    public Map uploadVideo(MultipartFile multipartFile, String folderName) throws IOException {
+        File file = convertMultiPartToFile(multipartFile);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("folder", folderName); // Specify the folder
+        params.put("resource_type", "video");
+
+        Map uploadResult = cloudinary.uploader().upload(file, params);
+
+        if (!Files.deleteIfExists(file.toPath())) {
+            log.error("Failed to delete file");
+            throw new IOException("Failed to delete file: " + file.getAbsolutePath());
+        }
+        return uploadResult;
     }
 
     @Override

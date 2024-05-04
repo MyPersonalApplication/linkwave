@@ -5,6 +5,7 @@ import com.example.demo.service.message.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -12,8 +13,8 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class KafkaListeners {
-    private final WebSocketMessageBroadcaster broadcaster;
     private final MessageService messageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @KafkaListener(
             topics = "linkwave",
@@ -22,6 +23,6 @@ public class KafkaListeners {
     public void listen(UUID messageId) {
         System.out.println("Received message: " + messageId);
         MessageDTO message = messageService.getMessage(messageId);
-        broadcaster.broadcastMessage(message);
+        messagingTemplate.convertAndSend("/topic/chat", message);
     }
 }
