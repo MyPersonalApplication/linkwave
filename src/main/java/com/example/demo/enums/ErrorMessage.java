@@ -20,6 +20,8 @@ public class ErrorMessage {
     public static final String MESSAGE_NOT_FOUND = "MESSAGE_NOT_FOUND";
     public static final String INCORRECT_OLD_PASSWORD = "INCORRECT_OLD_PASSWORD";
     public static final String FAILED_TO_SAVE_IMAGE = "FAILED_TO_SAVE_IMAGE";
+    public static final String POST_NOT_FOUND = "POST_NOT_FOUND";
+    public static final String POST_LIKE_NOT_FOUND = "POST_LIKE_NOT_FOUND";
 
     private ErrorMessage() {
     }

@@ -38,5 +38,8 @@ public class Post extends BaseModel {
     private List<PostMedia> postMedia;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostLike> postLikes;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostComment> postComments;
 }

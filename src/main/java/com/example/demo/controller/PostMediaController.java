@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/post-media")
+@RequestMapping("/api/posts")
 @PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class PostMediaController {
     private final PostMediaService postMediaService;
 
-    @PostMapping("/{postId}")
+    @PostMapping("/{postId}/media")
     public ResponseEntity<List<PostMediaDTO>> createPostMedia(@RequestPart("multipartFile") List<MultipartFile> multipartFiles, @PathVariable UUID postId) {
         return ResponseEntity.ok(postMediaService.createPostMedia(multipartFiles, postId));
     }

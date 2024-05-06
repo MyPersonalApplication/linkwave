@@ -12,6 +12,8 @@ public interface PostMapper {
     PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
     @Mapping(target = "lstMedia", source = "postMedia")
+    @Mapping(target = "lstComments", source = "postComments")
+    @Mapping(target = "lstLikes", source = "postLikes")
     PostDTO toDto(Post post);
 
     @Mapping(target = "user.id", source = "userId")

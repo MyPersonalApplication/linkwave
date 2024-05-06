@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -27,5 +28,10 @@ public class PostController {
     @GetMapping()
     public ResponseEntity<List<PostDTO>> getAll() {
         return ResponseEntity.ok(postService.getPosts());
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDTO> getPost(@PathVariable UUID postId) {
+        return ResponseEntity.ok(postService.getPost(postId));
     }
 }

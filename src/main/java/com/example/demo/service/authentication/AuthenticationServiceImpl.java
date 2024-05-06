@@ -6,9 +6,11 @@ import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.authentication.AuthenticationResponse;
 import com.example.demo.dto.authentication.RegisterDTO;
+import com.example.demo.dto.user.UserCreateDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.CredentialResetAction;
 import com.example.demo.enums.ErrorMessage;
+import com.example.demo.mapper.user.UserMapper;
 import com.example.demo.model.user.User;
 import com.example.demo.model.user.UserAvatar;
 import com.example.demo.model.user.UserCover;
@@ -90,31 +92,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 realmResource.users().get(userId).sendVerifyEmail();
 
                 try {
-                    User userEntity = User.builder()
+                    UserCreateDTO userCreateDTO = UserCreateDTO.builder()
                             .id(UUID.fromString(userId))
                             .email(registerDTO.getEmail())
                             .isActive(true)
-                            .createdAt(new Date())
-                            .updatedAt(new Date())
-                            .userProfile(UserProfile.builder().build())
-                            .userSkills(Collections.emptyList())
-                            .userExperiences(Collections.emptyList())
-                            .userActivities(Collections.emptyList())
-                            .targetUserActivities(Collections.emptyList())
-                            .sentNotifications(Collections.emptyList())
-                            .receivedNotifications(Collections.emptyList())
-                            .albumMedia(Collections.emptyList())
-                            .sentFriendRequests(Collections.emptyList())
-                            .receivedFriendRequests(Collections.emptyList())
-                            .friendships(Collections.emptyList())
-                            .friendOfFriendships(Collections.emptyList())
-                            .messages(Collections.emptyList())
-                            .participants(Collections.emptyList())
-                            .posts(Collections.emptyList())
-                            .postComments(Collections.emptyList())
-                            .replyComments(Collections.emptyList())
-                            .likeComments(Collections.emptyList())
                             .build();
+
+                    User userEntity = UserMapper.INSTANCE.toEntity(userCreateDTO);
+                    userEntity.setCreatedAt(new Date());
+                    userEntity.setUpdatedAt(new Date());
 
                     UserProfile userProfile = UserProfile.builder()
                             .createdAt(new Date())

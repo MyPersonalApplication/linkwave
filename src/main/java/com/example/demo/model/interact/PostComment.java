@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,8 +39,8 @@ public class PostComment extends BaseModel {
     private User user;
 
     @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL)
-    private Set<ReplyComment> replyComments;
+    private List<ReplyComment> replyComments;
 
     @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL)
-    private Set<LikeComment> likeComments;
+    private List<LikeComment> likeComments;
 }

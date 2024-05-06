@@ -1,8 +1,5 @@
-package com.example.demo.dto.post;
+package com.example.demo.dto.postcomment;
 
-import com.example.demo.dto.postcomment.PostCommentDTO;
-import com.example.demo.dto.postlike.PostLikeDTO;
-import com.example.demo.dto.postmedia.PostMediaDTO;
 import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +8,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,12 +15,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PostDTO {
+public class PostCommentDTO {
     private UUID id;
     private String content;
     private UserDTO user;
-    private List<PostMediaDTO> lstMedia;
-    private List<PostLikeDTO> lstLikes;
-    private List<PostCommentDTO> lstComments;
     private Date createdAt;
 }

@@ -8,10 +8,7 @@ import com.example.demo.model.chat.Message;
 import com.example.demo.model.chat.Participant;
 import com.example.demo.model.friend.FriendRequest;
 import com.example.demo.model.friend.Friendship;
-import com.example.demo.model.interact.LikeComment;
-import com.example.demo.model.interact.Post;
-import com.example.demo.model.interact.PostComment;
-import com.example.demo.model.interact.ReplyComment;
+import com.example.demo.model.interact.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -105,6 +102,9 @@ public class User extends BaseModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PostLike> postLikes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore

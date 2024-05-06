@@ -1,5 +1,6 @@
 package com.example.demo.mapper.user;
 
+import com.example.demo.dto.user.UserCreateDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.model.user.User;
 import org.mapstruct.Mapper;
@@ -18,4 +19,6 @@ public interface UserMapper {
     @Mapping(target = "skills", source = "userSkills")
     @Mapping(target = "experiences", source = "userExperiences")
     UserDTO toDto(User user);
+
+    User toEntity(UserCreateDTO userDTO);
 }

@@ -1,9 +1,12 @@
 package com.example.demo.service.post;
 
 import com.example.demo.config.authentication.TokenHandler;
+import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.post.CreatePostDTO;
 import com.example.demo.dto.post.PostDTO;
+import com.example.demo.dto.postcomment.PostCommentDTO;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.interact.Post;
 import com.example.demo.repository.PostRepository;
@@ -60,12 +63,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getPost(UUID postId) {
-        return null;
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException(ErrorMessage.POST_NOT_FOUND));
+
+        PostDTO postDTO = PostMapper.INSTANCE.toDto(post);
+        UserDTO userDTO = userService.buildUserDTO(post.getUser().getId());
+        postDTO.setUser(userDTO);
+
+        List<PostCommentDTO> postCommentDTOS = postDTO.getLstComments().stream().map(comment -> {
+            UserDTO userComment = userService.buildUserDTO(comment.getUser().getId());
+            comment.setUser(userComment);
+            return comment;
+        }).toList();
+
+        postDTO.setLstComments(postCommentDTOS);
+
+        return postDTO;
     }
 
     @Override
     public List<PostDTO> getPosts() {
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postRepository.findAllPosts();
 
         return postList.stream()
                 .map(post -> {
