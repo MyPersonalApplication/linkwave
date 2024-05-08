@@ -132,7 +132,7 @@ public class UserService {
         return user.get();
     }
 
-    public ResponseDTO updateProfile(String userId, UserUpdateDTO userUpdateDTO) {
+    public UserDTO updateProfile(String userId, UserUpdateDTO userUpdateDTO) {
         Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUserId(UUID.fromString(userId)));
         if (userProfile.isEmpty()) {
             throw new NotFoundException(ErrorMessage.USER_PROFILE_NOT_FOUND);
@@ -152,9 +152,7 @@ public class UserService {
         UserProfileMapper.INSTANCE.mapUpdate(userProfile.get(), userUpdateDTO.getProfile());
         userProfileRepository.save(userProfile.get());
 
-        return ResponseDTO.builder()
-                .message("Update profile successfully")
-                .build();
+        return getCurrentProfile();
     }
 
     public ResponseDTO updateAvatar(String userId, MultipartFile multipartFile) throws IOException {

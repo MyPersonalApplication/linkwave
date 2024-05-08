@@ -16,4 +16,6 @@ public interface PostService {
     PostDTO getPost(UUID postId);
 
     List<PostDTO> getPosts();
+
+    List<PostDTO> getUserPosts(UUID userId);
 }

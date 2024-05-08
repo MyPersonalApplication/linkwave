@@ -93,4 +93,18 @@ public class PostServiceImpl implements PostService {
                 })
                 .toList();
     }
+
+    @Override
+    public List<PostDTO> getUserPosts(UUID userId) {
+        List<Post> postList = postRepository.findAllByUserId(userId);
+
+        return postList.stream()
+                .map(post -> {
+                    PostDTO postDTO = PostMapper.INSTANCE.toDto(post);
+                    UserDTO userDTO = userService.buildUserDTO(post.getUser().getId());
+                    postDTO.setUser(userDTO);
+                    return postDTO;
+                })
+                .toList();
+    }
 }

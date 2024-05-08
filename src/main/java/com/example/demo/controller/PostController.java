@@ -30,6 +30,11 @@ public class PostController {
         return ResponseEntity.ok(postService.getPosts());
     }
 
+    @GetMapping("user/{userId}")
+    public ResponseEntity<List<PostDTO>> getUserPosts(@PathVariable UUID userId) {
+        return ResponseEntity.ok(postService.getUserPosts(userId));
+    }
+
     @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> getPost(@PathVariable UUID postId) {
         return ResponseEntity.ok(postService.getPost(postId));

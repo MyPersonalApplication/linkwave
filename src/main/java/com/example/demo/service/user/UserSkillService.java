@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,15 +35,18 @@ public class UserSkillService {
     public UserSkillDTO createNewUserSkill(UserSkillCreateDTO userSkillCreateDTO) {
         UserDTO userDTO = keycloakService.getUserProfile(realmName);
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
+
         if (user.isEmpty()) {
             throw new NotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
-        UserSkill userSkill = UserSkill.builder()
-                .skillName(userSkillCreateDTO.getSkillName())
-                .certificationName(userSkillCreateDTO.getCertificationName())
-                .user(user.get())
-                .build();
-        return UserSkillMapper.INSTANCE.toDto(userSkillRepository.save(userSkill));
+
+        userSkillCreateDTO.setUserId(user.get().getId());
+        UserSkill userSkill = UserSkillMapper.INSTANCE.toEntity(userSkillCreateDTO);
+        userSkill.setCreatedAt(new Date());
+        userSkill.setUpdatedAt(new Date());
+        userSkillRepository.save(userSkill);
+
+        return UserSkillMapper.INSTANCE.toDto(userSkill);
     }
 
     public ResponseDTO updateUserSkill(String userSkillId, UserSkillUpdateDTO userSkillUpdateDTO) {

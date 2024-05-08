@@ -42,25 +42,21 @@ public class UserExperienceService {
     public UserExperienceDTO createNewUserExperience(UserExperienceCreateDTO userExperienceCreateDTO) {
         UserDTO userDTO = keycloakService.getUserProfile(realmName);
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
+
         if (user.isEmpty()) {
             throw new NotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
         if (!isValidExperienceType(String.valueOf(userExperienceCreateDTO.getExperienceType()))) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_EXPERIENCE_TYPE);
         }
-        UserExperience userExperience = UserExperience.builder()
-                .companyOrSchoolName(userExperienceCreateDTO.getCompanyOrSchoolName())
-                .positionOrDegree(userExperienceCreateDTO.getPositionOrDegree())
-                .description(userExperienceCreateDTO.getDescription())
-                .startDate(userExperienceCreateDTO.getStartDate())
-                .endDate(userExperienceCreateDTO.getEndDate())
-                .location(userExperienceCreateDTO.getLocation())
-                .experienceType(ExperienceType.valueOf(userExperienceCreateDTO.getExperienceType()))
-                .user(user.get())
-                .createdAt(new Date())
-                .updatedAt(new Date())
-                .build();
-        return UserExperienceMapper.INSTANCE.toDto(userExperienceRepository.save(userExperience));
+
+        userExperienceCreateDTO.setUserId(user.get().getId());
+        UserExperience userExperience = UserExperienceMapper.INSTANCE.toEntity(userExperienceCreateDTO);
+        userExperience.setCreatedAt(new Date());
+        userExperience.setUpdatedAt(new Date());
+        userExperienceRepository.save(userExperience);
+
+        return UserExperienceMapper.INSTANCE.toDto(userExperience);
     }
 
     private static boolean isValidExperienceType(String input) {

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +18,5 @@ public class UserExperienceCreateDTO {
     private Date endDate;
     private String location;
     private String experienceType;
+    private UUID userId;
 }

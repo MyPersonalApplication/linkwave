@@ -1,5 +1,6 @@
 package com.example.demo.mapper.user;
 
+import com.example.demo.dto.user.skill.UserSkillCreateDTO;
 import com.example.demo.dto.user.skill.UserSkillDTO;
 import com.example.demo.dto.user.skill.UserSkillUpdateDTO;
 import com.example.demo.model.user.UserSkill;
@@ -15,4 +16,7 @@ public interface UserSkillMapper {
     void mapUpdate(@MappingTarget UserSkill userSkill, UserSkillUpdateDTO userSkillUpdateDTO);
 
     UserSkillDTO toDto(UserSkill userSkill);
+
+    @Mapping(target = "user.id", source = "userId")
+    UserSkill toEntity(UserSkillCreateDTO userSkillCreateDTO);
 }
