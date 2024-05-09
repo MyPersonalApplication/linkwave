@@ -34,12 +34,15 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
   kafka:
-    consumer:
-      bootstrap-servers: localhost:9092
-      group-id: chat-group
-      auto-offset-reset: earliest
+    bootstrap-servers: localhost:9092
     producer:
       bootstrap-servers: localhost:9092
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: linkwave-group
+      auto-offset-reset: earliest
+    client-id: linkwave-client
+
 
 server:
   port: 8080
