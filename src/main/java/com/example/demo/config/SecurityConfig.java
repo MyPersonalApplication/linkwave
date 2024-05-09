@@ -31,7 +31,7 @@ public class SecurityConfig {
         http.cors(cors -> {
             cors.configurationSource(request -> {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:4200/"));
+                corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200", "https://linkwave.tech"));
                 corsConfiguration.setAllowCredentials(true);
                 corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                 corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
@@ -42,7 +42,6 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers("/api/auth/**").permitAll();
-            authorize.requestMatchers("/ws/**").permitAll();
             authorize.anyRequest().authenticated();
         });
 
