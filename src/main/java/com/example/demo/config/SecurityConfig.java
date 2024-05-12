@@ -3,6 +3,7 @@ package com.example.demo.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,9 +17,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.List;
 
 @Configuration
+@Order(1)
 @EnableWebSecurity
 @EnableMethodSecurity
-@EnableWebSocketSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthConverter jwtAuthConverter;
@@ -42,6 +43,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers("/api/auth/**").permitAll();
+            authorize.requestMatchers("/websocket/**").permitAll();
             authorize.anyRequest().authenticated();
         });
 

@@ -1,6 +1,5 @@
 package com.example.demo.dto.message;
 
-import com.example.demo.dto.conversation.ConversationDTO;
 import com.example.demo.dto.user.UserDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

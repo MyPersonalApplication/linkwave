@@ -4,6 +4,9 @@ public class ErrorMessage {
     public static final String COULD_NOT_FOUND_USER = "COULD_NOT_FOUND_USER";
     public static final String INCORRECT_LOGIN_CREDENTIALS = "INCORRECT_LOGIN_CREDENTIALS";
     public static final String USER_NOT_FOUND = "USER_NOT_FOUND";
+    public static final String JWT_MISSING = "JWT_MISSING";
+    public static final String TOKEN_EXPIRED = "TOKEN_EXPIRED";
+    public static final String NOT_AUTHORIZED = "NOT_AUTHORIZED";
     public static final String USER_PROFILE_NOT_FOUND = "USER_PROFILE_NOT_FOUND";
     public static final String USER_AVATAR_NOT_FOUND = "USER_AVATAR_NOT_FOUND";
     public static final String USER_COVER_NOT_FOUND = "USER_COVER_NOT_FOUND";

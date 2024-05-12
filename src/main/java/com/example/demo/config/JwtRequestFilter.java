@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.config.authentication.AccessTokenHandler;
+import com.example.demo.enums.ErrorMessage;
 import com.example.demo.model.user.User;
 import com.example.demo.service.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,7 +49,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             response.getWriter().write(convertObjectToJson(e));
         } catch (NotAuthorizedException e) {
             logger.error("Cannot set user authentication: {}", e);
-            throw new NotAuthorizedException("NOT_AUTHORIZED", e.getMessage());
+            throw new NotAuthorizedException(ErrorMessage.NOT_AUTHORIZED, e.getMessage());
         }
 
         filterChain.doFilter(request, response);
@@ -85,19 +86,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 accessTokenHandler.setUsername(username);
                 accessTokenHandler.setUserId(user.get().getId());
             } else {
-                throw new NotAuthorizedException("USER_NOT_FOUND");
+                throw new NotAuthorizedException(ErrorMessage.USER_NOT_FOUND);
             }
             JwtAuthenticationToken token = new JwtAuthenticationToken(jwt, AuthorityUtils.createAuthorityList(getRoles(jwt.getClaims())));
             SecurityContextHolder.getContext().setAuthentication(token);
         } else {
-            throw new NotAuthorizedException("JWT_MISSING");
+            throw new NotAuthorizedException(ErrorMessage.JWT_MISSING);
         }
     }
 
     public void isTokenExpired(Jwt jwt) {
         Instant expiration = Instant.ofEpochMilli(Long.parseLong(jwt.getClaims().get("exp").toString()) * 1000);
         if (Instant.now().isAfter(expiration)) {
-            throw new ExpiredJwtException(null, null, "TOKEN_EXPIRED");
+            throw new ExpiredJwtException(null, null, ErrorMessage.TOKEN_EXPIRED);
         }
     }
 
