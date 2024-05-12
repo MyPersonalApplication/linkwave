@@ -13,17 +13,31 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private static final String TOPIC_NAME = "chat-message";
+    private static final String TOPIC_CHAT_MESSAGE = "chat-message";
+    private static final String TOPIC_POST = "post";
 
-    public void sendMessage(String message) {
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_NAME, message);
+    public void sendMessage(String messageId) {
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_CHAT_MESSAGE, messageId);
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                System.out.println("Sent message=[" + message +
+                System.out.println("Sent message=[" + messageId +
                         "] with offset=[" + result.getRecordMetadata().offset() + "]");
             } else {
                 System.out.println("Unable to send message=[" +
-                        message + "] due to : " + ex.getMessage());
+                        messageId + "] due to : " + ex.getMessage());
+            }
+        });
+    }
+
+    public void sendPost(String postId) {
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_POST, postId);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Sent post=[" + postId +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+            } else {
+                System.out.println("Unable to send post=[" +
+                        postId + "] due to : " + ex.getMessage());
             }
         });
     }

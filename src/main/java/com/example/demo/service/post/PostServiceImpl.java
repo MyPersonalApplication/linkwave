@@ -11,8 +11,10 @@ import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.interact.Post;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.user.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,6 +24,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class PostServiceImpl implements PostService {
     private final TokenHandler tokenHandler;
     private final PostRepository postRepository;
@@ -64,6 +67,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO getPost(UUID postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException(ErrorMessage.POST_NOT_FOUND));
+        Hibernate.initialize(post.getPostMedia());
 
         PostDTO postDTO = PostMapper.INSTANCE.toDto(post);
         UserDTO userDTO = userService.buildUserDTO(post.getUser().getId());

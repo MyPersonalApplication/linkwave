@@ -74,6 +74,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework:spring-messaging'
 	implementation 'org.springframework.security:spring-security-messaging'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
 }
 
 tasks.named('test') {

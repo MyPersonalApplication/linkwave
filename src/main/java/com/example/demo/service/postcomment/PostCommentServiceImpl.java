@@ -9,6 +9,7 @@ import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.PostCommentMapper;
 import com.example.demo.model.interact.PostComment;
 import com.example.demo.repository.PostCommentRepository;
+import com.example.demo.service.kafka.KafkaProducer;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class PostCommentServiceImpl implements PostCommentService {
     private final TokenHandler tokenHandler;
     private final PostCommentRepository postCommentRepository;
     private final UserService userService;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public PostCommentDTO commentPost(UUID postId, CreatePostCommentDTO createPostCommentDTO) {
@@ -47,6 +49,9 @@ public class PostCommentServiceImpl implements PostCommentService {
         PostCommentDTO postCommentDTO = PostCommentMapper.INSTANCE.toDto(postComment);
         UserDTO userDTO = userService.buildUserDTO(postCommentDTO.getUser().getId());
         postCommentDTO.setUser(userDTO);
+
+        // Send message to kafka
+        kafkaProducer.sendPost(String.valueOf(postId));
 
         return postCommentDTO;
     }
