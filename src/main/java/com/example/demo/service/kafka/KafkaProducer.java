@@ -14,7 +14,8 @@ import java.util.concurrent.CompletableFuture;
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private static final String TOPIC_CHAT_MESSAGE = "chat-message";
-    private static final String TOPIC_POST = "post";
+    private static final String TOPIC_POST_COMMENT = "post-comment";
+    private static final String TOPIC_REPLY_COMMENT = "reply-comment";
 
     public void sendMessage(String messageId) {
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_CHAT_MESSAGE, messageId);
@@ -29,15 +30,28 @@ public class KafkaProducer {
         });
     }
 
-    public void sendPost(String postId) {
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_POST, postId);
+    public void sendPostComment(String postCommentId) {
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_POST_COMMENT, postCommentId);
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                System.out.println("Sent post=[" + postId +
+                System.out.println("Sent message=[" + postCommentId +
                         "] with offset=[" + result.getRecordMetadata().offset() + "]");
             } else {
-                System.out.println("Unable to send post=[" +
-                        postId + "] due to : " + ex.getMessage());
+                System.out.println("Unable to send message=[" +
+                        postCommentId + "] due to : " + ex.getMessage());
+            }
+        });
+    }
+
+    public void sendReplyComment(String replyCommentId) {
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_REPLY_COMMENT, replyCommentId);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Sent message=[" + replyCommentId +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+            } else {
+                System.out.println("Unable to send message=[" +
+                        replyCommentId + "] due to : " + ex.getMessage());
             }
         });
     }

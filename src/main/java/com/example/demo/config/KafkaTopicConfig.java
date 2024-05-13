@@ -33,8 +33,16 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic postTopic() {
-        return TopicBuilder.name("post")
+    public NewTopic postCommentTopic() {
+        return TopicBuilder.name("post-comment")
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic replyCommentTopic() {
+        return TopicBuilder.name("reply-comment")
                 .partitions(1)
                 .replicas(1)
                 .build();

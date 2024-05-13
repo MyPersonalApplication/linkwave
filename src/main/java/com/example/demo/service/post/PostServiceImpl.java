@@ -5,11 +5,13 @@ import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.post.CreatePostDTO;
 import com.example.demo.dto.post.PostDTO;
 import com.example.demo.dto.postcomment.PostCommentDTO;
+import com.example.demo.dto.replycomment.ReplyCommentDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.interact.Post;
 import com.example.demo.repository.PostRepository;
+import com.example.demo.service.postcomment.PostCommentService;
 import com.example.demo.service.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class PostServiceImpl implements PostService {
     private final TokenHandler tokenHandler;
     private final PostRepository postRepository;
     private final UserService userService;
+    private final PostCommentService postCommentService;
 
     @Override
     public PostDTO createPost(CreatePostDTO createPostDTO) {
@@ -67,7 +70,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO getPost(UUID postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException(ErrorMessage.POST_NOT_FOUND));
-        Hibernate.initialize(post.getPostMedia());
+//        Hibernate.initialize(post.getPostMedia());
+//        Hibernate.initialize(post.getPostComments());
 
         PostDTO postDTO = PostMapper.INSTANCE.toDto(post);
         UserDTO userDTO = userService.buildUserDTO(post.getUser().getId());
@@ -76,6 +80,10 @@ public class PostServiceImpl implements PostService {
         List<PostCommentDTO> postCommentDTOS = postDTO.getLstComments().stream().map(comment -> {
             UserDTO userComment = userService.buildUserDTO(comment.getUser().getId());
             comment.setUser(userComment);
+
+            List<ReplyCommentDTO> replyCommentDTOS = postCommentService.getReplyComments(comment.getId());
+            comment.setLstReplyComments(replyCommentDTOS);
+
             return comment;
         }).toList();
 

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class ReplyComment extends BaseModel {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "post_comment_id", nullable = false)
+    @JoinColumn(name = "comment_id", nullable = false)
     private PostComment postComment;
 
     @ManyToOne
@@ -38,5 +39,5 @@ public class ReplyComment extends BaseModel {
     private User user;
 
     @OneToMany(mappedBy = "replyComment", cascade = CascadeType.ALL)
-    private Set<LikeComment> likeComments;
+    private List<LikeComment> likeComments;
 }

@@ -25,6 +25,8 @@ public class ErrorMessage {
     public static final String FAILED_TO_SAVE_IMAGE = "FAILED_TO_SAVE_IMAGE";
     public static final String POST_NOT_FOUND = "POST_NOT_FOUND";
     public static final String POST_LIKE_NOT_FOUND = "POST_LIKE_NOT_FOUND";
+    public static final String POST_COMMENT_NOT_FOUND = "POST_COMMENT_NOT_FOUND";
+    public static final String REPLY_COMMENT_NOT_FOUND = "REPLY_COMMENT_NOT_FOUND";
 
     private ErrorMessage() {
     }

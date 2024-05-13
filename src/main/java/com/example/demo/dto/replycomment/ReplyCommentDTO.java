@@ -1,6 +1,6 @@
-package com.example.demo.dto.postcomment;
+package com.example.demo.dto.replycomment;
 
-import com.example.demo.dto.replycomment.ReplyCommentDTO;
+import com.example.demo.dto.postcomment.PostCommentDTO;
 import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,11 +16,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PostCommentDTO {
+public class ReplyCommentDTO {
     private UUID id;
     private String content;
-    private UUID postId;
+    private UUID postCommentId;
     private UserDTO user;
-    private List<ReplyCommentDTO> lstReplyComments;
     private Date createdAt;
 }

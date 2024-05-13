@@ -11,6 +11,8 @@ import org.mapstruct.factory.Mappers;
 public interface PostCommentMapper {
     PostCommentMapper INSTANCE = Mappers.getMapper(PostCommentMapper.class);
 
+    @Mapping(target = "postId", source = "post.id")
+    @Mapping(target = "lstReplyComments", source = "replyComments")
     PostCommentDTO toDto(PostComment postComment);
 
     @Mapping(target = "post.id", source = "postId")
