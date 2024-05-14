@@ -26,12 +26,8 @@ public class LikeComment extends BaseModel {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "post_comment_id", nullable = false)
     private PostComment postComment;
-
-    @ManyToOne
-    @JoinColumn(name = "reply_comment_id")
-    private ReplyComment replyComment;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

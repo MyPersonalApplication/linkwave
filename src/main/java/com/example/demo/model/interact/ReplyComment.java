@@ -37,7 +37,4 @@ public class ReplyComment extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @OneToMany(mappedBy = "replyComment", cascade = CascadeType.ALL)
-    private List<LikeComment> likeComments;
 }

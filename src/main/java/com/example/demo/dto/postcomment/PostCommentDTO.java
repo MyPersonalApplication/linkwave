@@ -1,5 +1,6 @@
 package com.example.demo.dto.postcomment;
 
+import com.example.demo.dto.likecomment.LikeCommentDTO;
 import com.example.demo.dto.replycomment.ReplyCommentDTO;
 import com.example.demo.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,6 @@ public class PostCommentDTO {
     private UUID postId;
     private UserDTO user;
     private List<ReplyCommentDTO> lstReplyComments;
+    private List<LikeCommentDTO> lstLikeComments;
     private Date createdAt;
 }

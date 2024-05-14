@@ -13,6 +13,7 @@ public interface PostCommentMapper {
 
     @Mapping(target = "postId", source = "post.id")
     @Mapping(target = "lstReplyComments", source = "replyComments")
+    @Mapping(target = "lstLikeComments", source = "likeComments")
     PostCommentDTO toDto(PostComment postComment);
 
     @Mapping(target = "post.id", source = "postId")

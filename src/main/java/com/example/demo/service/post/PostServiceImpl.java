@@ -2,6 +2,7 @@ package com.example.demo.service.post;
 
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.controller.exception.NotFoundException;
+import com.example.demo.dto.likecomment.LikeCommentDTO;
 import com.example.demo.dto.post.CreatePostDTO;
 import com.example.demo.dto.post.PostDTO;
 import com.example.demo.dto.postcomment.PostCommentDTO;
@@ -12,6 +13,7 @@ import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.interact.Post;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.postcomment.PostCommentService;
+import com.example.demo.service.postlike.PostLikeService;
 import com.example.demo.service.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final PostCommentService postCommentService;
+    private final PostLikeService postLikeService;
 
     @Override
     public PostDTO createPost(CreatePostDTO createPostDTO) {
@@ -83,6 +86,9 @@ public class PostServiceImpl implements PostService {
 
             List<ReplyCommentDTO> replyCommentDTOS = postCommentService.getReplyComments(comment.getId());
             comment.setLstReplyComments(replyCommentDTOS);
+
+            List<LikeCommentDTO> likeCommentDTOS = postLikeService.getCommentLikes(comment.getId());
+            comment.setLstLikeComments(likeCommentDTOS);
 
             return comment;
         }).toList();

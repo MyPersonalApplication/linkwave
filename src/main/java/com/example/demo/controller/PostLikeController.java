@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.likecomment.LikeCommentDTO;
 import com.example.demo.dto.post.CreatePostDTO;
 import com.example.demo.dto.post.PostDTO;
 import com.example.demo.dto.postlike.PostLikeDTO;
@@ -33,5 +34,21 @@ public class PostLikeController {
     @DeleteMapping("/{postLikeId}/unlike")
     public ResponseEntity<UUID> unlikePost(@PathVariable UUID postLikeId) {
         return ResponseEntity.ok(postLikeService.unlikePost(postLikeId));
+    }
+
+    // Post comment controller
+    @GetMapping("/comment/{postCommentId}/likes")
+    public ResponseEntity<List<LikeCommentDTO>> getCommentLikes(@PathVariable UUID postCommentId) {
+        return ResponseEntity.ok(postLikeService.getCommentLikes(postCommentId));
+    }
+
+    @PostMapping("/comment/{postCommentId}/like")
+    public ResponseEntity<LikeCommentDTO> likeComment(@PathVariable UUID postCommentId) {
+        return ResponseEntity.ok(postLikeService.likeComment(postCommentId));
+    }
+
+    @DeleteMapping("/comment/{likeCommentId}/unlike")
+    public ResponseEntity<UUID> unlikeComment(@PathVariable UUID likeCommentId) {
+        return ResponseEntity.ok(postLikeService.unlikeComment(likeCommentId));
     }
 }

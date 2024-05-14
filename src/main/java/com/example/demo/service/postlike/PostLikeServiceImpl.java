@@ -2,14 +2,19 @@ package com.example.demo.service.postlike;
 
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.controller.exception.NotFoundException;
+import com.example.demo.dto.likecomment.CreateLikeCommentDTO;
+import com.example.demo.dto.likecomment.LikeCommentDTO;
 import com.example.demo.dto.postlike.CreatePostLikeDTO;
 import com.example.demo.dto.postlike.PostLikeDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
+import com.example.demo.mapper.LikeCommentMapper;
 import com.example.demo.mapper.PostLikeMapper;
 import com.example.demo.mapper.PostMapper;
+import com.example.demo.model.interact.LikeComment;
 import com.example.demo.model.interact.Post;
 import com.example.demo.model.interact.PostLike;
+import com.example.demo.repository.LikeCommentRepository;
 import com.example.demo.repository.PostLikeRepository;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +29,7 @@ import java.util.UUID;
 public class PostLikeServiceImpl implements PostLikeService {
     private final TokenHandler tokenHandler;
     private final PostLikeRepository postLikeRepository;
+    private final LikeCommentRepository likeCommentRepository;
     private final UserService userService;
 
     @Override
@@ -70,6 +76,54 @@ public class PostLikeServiceImpl implements PostLikeService {
                     UserDTO userDTO = userService.buildUserDTO(postLike.getUser().getId());
                     postLikeDTO.setUser(userDTO);
                     return postLikeDTO;
+                })
+                .toList();
+    }
+
+    @Override
+    public LikeCommentDTO likeComment(UUID postCommentId) {
+        // Get user id from token
+        UUID userId = tokenHandler.getUserId();
+
+        CreateLikeCommentDTO createLikeCommentDTO = CreateLikeCommentDTO.builder()
+                .postCommentId(postCommentId)
+                .userId(userId)
+                .build();
+
+        LikeComment likeComment = LikeCommentMapper.INSTANCE.toEntity(createLikeCommentDTO);
+
+        if (likeComment.getPostComment() == null) {
+            throw new NotFoundException(ErrorMessage.POST_COMMENT_NOT_FOUND);
+        }
+
+        likeComment.setCreatedAt(new Date());
+        likeComment.setUpdatedAt(new Date());
+
+        likeCommentRepository.save(likeComment);
+
+        return LikeCommentMapper.INSTANCE.toDto(likeComment);
+    }
+
+    @Override
+    public UUID unlikeComment(UUID likeCommentId) {
+        LikeComment likeComment = likeCommentRepository.findById(likeCommentId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.LIKE_COMMENT_NOT_FOUND));
+
+        likeCommentRepository.delete(likeComment);
+
+        return likeComment.getId();
+    }
+
+    @Override
+    public List<LikeCommentDTO> getCommentLikes(UUID postCommentId) {
+        List<LikeComment> likeComments = likeCommentRepository.findAllByPostCommentId(postCommentId);
+
+        return likeComments.stream()
+                .map(likeComment -> {
+                    LikeCommentDTO likeCommentDTO = LikeCommentMapper.INSTANCE.toDto(likeComment);
+                    UserDTO userDTO = userService.buildUserDTO(likeComment.getUser().getId());
+                    likeCommentDTO.setUser(userDTO);
+                    return likeCommentDTO;
                 })
                 .toList();
     }
