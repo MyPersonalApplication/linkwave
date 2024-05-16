@@ -17,4 +17,7 @@ public interface UserRepository extends BaseRepository<User>, JpaSpecificationEx
             WHERE u.id <> :excludedId
             """)
     List<User> findUsersExcludingId(UUID excludedId);
+
+    @Override
+    List<User> findAll();
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.message.CreateMessageDTO;
 import com.example.demo.dto.message.MessageDTO;
 import com.example.demo.dto.post.CreatePostDTO;
@@ -26,8 +27,15 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<PostDTO>> getAll() {
-        return ResponseEntity.ok(postService.getPosts());
+    public ResponseEntity<SearchResultDTO> getAll(@RequestParam(required = false, defaultValue = "0") int page,
+                                                @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(postService.getPosts(page, pageSize));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchResultDTO> search(@RequestParam(required = false, defaultValue = "0") int page,
+                                                  @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(postService.searchPost(page, pageSize));
     }
 
     @GetMapping("user/{userId}")

@@ -1,5 +1,6 @@
 package com.example.demo.service.post;
 
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.post.CreatePostDTO;
 import com.example.demo.dto.post.PostDTO;
 
@@ -15,7 +16,9 @@ public interface PostService {
 
     PostDTO getPost(UUID postId);
 
-    List<PostDTO> getPosts();
+    SearchResultDTO getPosts(int page, int size);
+
+    SearchResultDTO searchPost(int page, int size);
 
     List<PostDTO> getUserPosts(UUID userId);
 }

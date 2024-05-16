@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.dto.authentication.ChangePasswordDTO;
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.dto.user.UserUpdateDTO;
 import com.example.demo.dto.user.experience.UserExperienceCreateDTO;
@@ -30,6 +31,12 @@ public class UserController {
     private final UserService userService;
     private final UserExperienceService userExperienceService;
     private final UserSkillService userSkillService;
+
+    @GetMapping()
+    public ResponseEntity<SearchResultDTO> getCurrentUser(@RequestParam(required = false, defaultValue = "0") int page,
+                                                          @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(userService.getAll(page, pageSize));
+    }
 
     @PostMapping(value = "/change-password")
     public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {

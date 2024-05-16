@@ -3,6 +3,7 @@ package com.example.demo.service.user;
 import com.example.demo.controller.exception.InvalidDataException;
 import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.dto.user.UserUpdateDTO;
 import com.example.demo.dto.user.avatar.UserAvatarDTO;
@@ -21,6 +22,9 @@ import com.example.demo.service.keycloak.KeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +46,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
     private final Environment environment;
+
+    public SearchResultDTO getAll(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<User> userPageResult = userRepository.findAll(pageable);
+
+        // Get all users from keycloak
+        List<UserDTO> userDTOs = userPageResult.getContent().stream().map(user -> getProfileByUserId(user.getId().toString())).toList();
+
+        SearchResultDTO searchResultDTO = new SearchResultDTO();
+        searchResultDTO.setPage(page);
+        searchResultDTO.setPageSize(pageSize);
+        searchResultDTO.setTotalPages(userPageResult.getTotalPages());
+        searchResultDTO.setContents(userDTOs);
+        searchResultDTO.setTotalSize(userPageResult.getTotalElements());
+
+        return searchResultDTO;
+    }
 
     public ResponseDTO changePassword(String oldPassword, String newPassword) {
         keycloakService.changePassword(oldPassword, newPassword, realmName);
