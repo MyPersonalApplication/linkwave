@@ -18,7 +18,7 @@ public interface PostService {
 
     SearchResultDTO getPosts(int page, int size);
 
-    SearchResultDTO searchPost(int page, int size);
+    SearchResultDTO searchPost(String query, int page, int size);
 
     List<PostDTO> getUserPosts(UUID userId);
 }

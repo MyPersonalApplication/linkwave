@@ -1,6 +1,7 @@
 package com.example.demo.dto.friendrequest;
 
 import com.example.demo.dto.user.avatar.UserAvatarDTO;
+import com.example.demo.dto.user.profile.UserProfileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,5 @@ public class UserRecommendDTO {
     private String firstName;
     private String lastName;
     private UserAvatarDTO avatar;
+    private UserProfileDTO profile;
 }

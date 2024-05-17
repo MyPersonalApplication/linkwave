@@ -38,6 +38,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll(page, pageSize));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<SearchResultDTO> searchUser(@RequestParam String query,
+                                                      @RequestParam(required = false, defaultValue = "0") int page,
+                                                      @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(userService.searchUser(query, page, pageSize));
+    }
+
     @PostMapping(value = "/change-password")
     public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         ResponseDTO responseDTO = userService.changePassword(changePasswordDTO.getOldPassword(), changePasswordDTO.getNewPassword());

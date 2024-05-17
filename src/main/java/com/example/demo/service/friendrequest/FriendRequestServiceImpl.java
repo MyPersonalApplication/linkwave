@@ -3,6 +3,7 @@ package com.example.demo.service.friendrequest;
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.controller.exception.NotFoundException;
 import com.example.demo.dto.ResponseDTO;
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.friendrequest.FriendRequestDTO;
 import com.example.demo.dto.friendrequest.RecommendDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
@@ -10,6 +11,7 @@ import com.example.demo.dto.friendrequest.UserRecommendDTO;
 import com.example.demo.dto.friendship.FriendShipCreateDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.dto.user.avatar.UserAvatarDTO;
+import com.example.demo.dto.user.profile.UserProfileDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.friend.FriendRequestMapper;
 import com.example.demo.mapper.friend.FriendShipMapper;
@@ -20,11 +22,16 @@ import com.example.demo.model.user.*;
 import com.example.demo.repository.FriendRequestRepository;
 import com.example.demo.repository.FriendShipRepository;
 import com.example.demo.repository.user.UserAvatarRepository;
+import com.example.demo.repository.user.UserProfileRepository;
 import com.example.demo.repository.user.UserRepository;
 import com.example.demo.service.keycloak.KeycloakService;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,6 +48,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     private final UserRepository userRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final FriendShipRepository friendShipRepository;
+    private final UserProfileRepository userProfileRepository;
     private final UserAvatarRepository userAvatarRepository;
 
     @Override
@@ -161,12 +169,23 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     }
 
     private UserRecommendDTO buildUserDTO(UserRecommendDTO userRecommendDTO, UUID userId) {
+        // Get user profile from database
+        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUserId(userId));
+        if (userProfile.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.USER_PROFILE_NOT_FOUND);
+        }
+        UserProfileDTO userProfileDTO = UserProfileMapper.INSTANCE.toDto(userProfile.get());
+
+        // Get user avatar and cover from database
         Optional<UserAvatar> userAvatar = Optional.ofNullable(userAvatarRepository.findByUserId(userId));
         if (userAvatar.isEmpty()) {
             throw new NotFoundException(ErrorMessage.USER_AVATAR_NOT_FOUND);
         }
         UserAvatarDTO userAvatarDTO = UserAvatarMapper.INSTANCE.toDto(userAvatar.get());
+
+        userRecommendDTO.setProfile(userProfileDTO);
         userRecommendDTO.setAvatar(userAvatarDTO);
+
         return userRecommendDTO;
     }
 
@@ -297,4 +316,44 @@ public class FriendRequestServiceImpl implements FriendRequestService {
                 .message("Friend request was deleted successfully")
                 .build();
     }
+
+    @Override
+    public SearchResultDTO searchFriend(String query, int page, int pageSize) {
+        List<RecommendDTO> recommendedFriends = getRecommendedFriends(-1);
+
+        // Filter the recommended friends based on the query
+        List<RecommendDTO> filteredFriends = recommendedFriends.stream()
+                .filter(recommendDTO -> recommendDTO.getUser().getFirstName().toLowerCase().contains(query.toLowerCase()) ||
+                        recommendDTO.getUser().getLastName().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+
+        // Create Pageable object
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        // Calculate the start and end indices for the current page
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredFriends.size());
+
+        // Create a sublist of the filtered friends for the current page
+        List<RecommendDTO> paginatedFriends = new ArrayList<>();
+        if (start <= end) {
+            paginatedFriends = filteredFriends.subList(start, end);
+        }
+
+        return getSearchResultDTO(paginatedFriends, pageable, filteredFriends);
+    }
+
+    private SearchResultDTO getSearchResultDTO(List<RecommendDTO> paginatedFriends, Pageable pageable, List<RecommendDTO> filteredFriends) {
+        Page<RecommendDTO> pagedResult = new PageImpl<>(paginatedFriends, pageable, filteredFriends.size());
+
+        // Create and return the SearchResultDTO
+        SearchResultDTO searchResultDTO = new SearchResultDTO();
+        searchResultDTO.setPage(pagedResult.getNumber());
+        searchResultDTO.setPageSize(pagedResult.getSize());
+        searchResultDTO.setTotalPages(pagedResult.getTotalPages());
+        searchResultDTO.setContents(pagedResult.getContent());
+        searchResultDTO.setTotalSize(pagedResult.getTotalElements());
+        return searchResultDTO;
+    }
+
 }

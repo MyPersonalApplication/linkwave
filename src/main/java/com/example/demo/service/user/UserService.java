@@ -50,7 +50,16 @@ public class UserService {
     public SearchResultDTO getAll(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<User> userPageResult = userRepository.findAll(pageable);
+        return buildSearchResultDTOs(userPageResult, page, pageSize);
+    }
 
+    public SearchResultDTO searchUser(String query, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<User> userPageResult = userRepository.findByEmailContainingIgnoreCase(query, pageable);
+        return buildSearchResultDTOs(userPageResult, page, pageSize);
+    }
+
+    private SearchResultDTO buildSearchResultDTOs(Page<User> userPageResult, int page, int pageSize) {
         // Get all users from keycloak
         List<UserDTO> userDTOs = userPageResult.getContent().stream().map(user -> getProfileByUserId(user.getId().toString())).toList();
 

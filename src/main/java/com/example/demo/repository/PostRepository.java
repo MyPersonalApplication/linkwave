@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.interact.Post;
+import com.example.demo.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,4 +23,6 @@ public interface PostRepository extends BaseRepository<Post>, JpaSpecificationEx
 
     @Override
     List<Post> findAll();
+
+    Page<Post> findByContentContainingIgnoreCase(String name, Pageable pageable);
 }

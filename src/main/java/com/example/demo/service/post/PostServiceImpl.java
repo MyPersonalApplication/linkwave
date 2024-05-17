@@ -12,6 +12,7 @@ import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.interact.Post;
+import com.example.demo.model.user.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.postcomment.PostCommentService;
 import com.example.demo.service.postlike.PostLikeService;
@@ -107,7 +108,17 @@ public class PostServiceImpl implements PostService {
     public SearchResultDTO getPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> postPageResult = postRepository.findAllPosts(pageable);
+        return buildSearchResultDTOs(postPageResult, page, size);
+    }
 
+    @Override
+    public SearchResultDTO searchPost(String query, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> postPageResult = postRepository.findByContentContainingIgnoreCase(query, pageable);
+        return buildSearchResultDTOs(postPageResult, page, size);
+    }
+
+    private SearchResultDTO buildSearchResultDTOs(Page<Post> postPageResult, int page, int pageSize) {
         List<PostDTO> postDTOS = postPageResult.getContent().stream().map(post -> {
             PostDTO postDTO = PostMapper.INSTANCE.toDto(post);
             UserDTO userDTO = userService.buildUserDTO(post.getUser().getId());
@@ -117,35 +128,12 @@ public class PostServiceImpl implements PostService {
 
         SearchResultDTO searchResultDTO = new SearchResultDTO();
         searchResultDTO.setPage(page);
-        searchResultDTO.setPageSize(size);
+        searchResultDTO.setPageSize(pageSize);
         searchResultDTO.setTotalPages(postPageResult.getTotalPages());
         searchResultDTO.setContents(postDTOS);
         searchResultDTO.setTotalSize(postPageResult.getTotalElements());
 
         return searchResultDTO;
-    }
-
-    @Override
-    public SearchResultDTO searchPost(int page, int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        Page<Post> postPageResult = postRepository.findAllPosts(pageable);
-//
-//        List<PostDTO> postDTOS = postPageResult.getContent().stream().map(post -> {
-//            PostDTO postDTO = PostMapper.INSTANCE.toDto(post);
-//            UserDTO userDTO = userService.buildUserDTO(post.getUser().getId());
-//            postDTO.setUser(userDTO);
-//            return postDTO;
-//        }).toList();
-//
-//        SearchResultDTO searchResultDTO = new SearchResultDTO();
-//        searchResultDTO.setPage(page);
-//        searchResultDTO.setPageSize(size);
-//        searchResultDTO.setTotalPages(postPageResult.getTotalPages());
-//        searchResultDTO.setContents(postDTOS);
-//        searchResultDTO.setTotalSize(postPageResult.getTotalElements());
-//
-//        return searchResultDTO;
-        return null;
     }
 
     @Override

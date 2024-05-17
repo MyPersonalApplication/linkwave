@@ -28,14 +28,15 @@ public class PostController {
 
     @GetMapping()
     public ResponseEntity<SearchResultDTO> getAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                                @RequestParam(required = false, defaultValue = "10") int pageSize) {
+                                                  @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return ResponseEntity.ok(postService.getPosts(page, pageSize));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<SearchResultDTO> search(@RequestParam(required = false, defaultValue = "0") int page,
+    public ResponseEntity<SearchResultDTO> search(@RequestParam String query,
+                                                  @RequestParam(required = false, defaultValue = "0") int page,
                                                   @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        return ResponseEntity.ok(postService.searchPost(page, pageSize));
+        return ResponseEntity.ok(postService.searchPost(query, page, pageSize));
     }
 
     @GetMapping("user/{userId}")

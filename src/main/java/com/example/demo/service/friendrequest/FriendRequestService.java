@@ -1,6 +1,7 @@
 package com.example.demo.service.friendrequest;
 
 import com.example.demo.dto.ResponseDTO;
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.friendrequest.FriendRequestDTO;
 import com.example.demo.dto.friendrequest.RecommendDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
@@ -23,4 +24,6 @@ public interface FriendRequestService {
     ResponseDTO rejectFriendRequest(UUID requestId);
 
     ResponseDTO deleteFriendRequest(UUID requestId);
+
+    SearchResultDTO searchFriend(String query, int page, int pageSize);
 }

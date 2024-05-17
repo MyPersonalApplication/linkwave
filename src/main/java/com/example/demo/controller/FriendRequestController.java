@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.base.SearchResultDTO;
 import com.example.demo.dto.friendrequest.FriendRequestDTO;
 import com.example.demo.dto.friendrequest.RecommendDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
@@ -33,6 +34,13 @@ public class FriendRequestController {
     public ResponseEntity<ResponseDTO> deleteFriendRequest(@PathVariable UUID requestId) {
         ResponseDTO responseDTO = friendRequestService.deleteFriendRequest(requestId);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchResultDTO> searchFriend(@RequestParam String query,
+                                                        @RequestParam(required = false, defaultValue = "0") int page,
+                                                        @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(friendRequestService.searchFriend(query, page, pageSize));
     }
 
     @GetMapping("/recommends")
