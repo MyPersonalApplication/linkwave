@@ -16,6 +16,7 @@ public class KafkaProducer {
     private static final String TOPIC_CHAT_MESSAGE = "chat-message";
     private static final String TOPIC_POST_COMMENT = "post-comment";
     private static final String TOPIC_REPLY_COMMENT = "reply-comment";
+    private static final String TOPIC_NOTIFICATION = "notification";
 
     public void sendMessage(String messageId) {
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_CHAT_MESSAGE, messageId);
@@ -52,6 +53,19 @@ public class KafkaProducer {
             } else {
                 System.out.println("Unable to send message=[" +
                         replyCommentId + "] due to : " + ex.getMessage());
+            }
+        });
+    }
+
+    public void sendNotification(String notificationId) {
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC_NOTIFICATION, notificationId);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Sent message=[" + notificationId +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+            } else {
+                System.out.println("Unable to send message=[" +
+                        notificationId + "] due to : " + ex.getMessage());
             }
         });
     }

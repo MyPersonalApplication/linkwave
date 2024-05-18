@@ -2,19 +2,24 @@ package com.example.demo.service.postcomment;
 
 import com.example.demo.config.authentication.TokenHandler;
 import com.example.demo.controller.exception.NotFoundException;
+import com.example.demo.dto.notification.CreateNotificationDTO;
 import com.example.demo.dto.postcomment.CreatePostCommentDTO;
 import com.example.demo.dto.postcomment.PostCommentDTO;
 import com.example.demo.dto.replycomment.CreateReplyCommentDTO;
 import com.example.demo.dto.replycomment.ReplyCommentDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
+import com.example.demo.enums.NotificationType;
 import com.example.demo.mapper.PostCommentMapper;
 import com.example.demo.mapper.ReplyCommentMapper;
+import com.example.demo.model.interact.Post;
 import com.example.demo.model.interact.PostComment;
 import com.example.demo.model.interact.ReplyComment;
 import com.example.demo.repository.PostCommentRepository;
+import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ReplyCommentRepository;
 import com.example.demo.service.kafka.KafkaProducer;
+import com.example.demo.service.notification.NotificationService;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
@@ -28,10 +33,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostCommentServiceImpl implements PostCommentService {
     private final TokenHandler tokenHandler;
+    private final PostRepository postRepository;
     private final PostCommentRepository postCommentRepository;
     private final ReplyCommentRepository replyCommentRepository;
     private final UserService userService;
     private final KafkaProducer kafkaProducer;
+    private final NotificationService notificationService;
 
     @Override
     public PostCommentDTO commentPost(UUID postId, CreatePostCommentDTO createPostCommentDTO) {
@@ -60,6 +67,16 @@ public class PostCommentServiceImpl implements PostCommentService {
 
         // Send message to kafka
         kafkaProducer.sendPostComment(String.valueOf(postCommentDTO.getId()));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.POST_NOT_FOUND));
+        CreateNotificationDTO createNotificationDTO = CreateNotificationDTO.builder()
+                .notificationType(String.valueOf(NotificationType.POST_COMMENT))
+                .isRead(false)
+                .senderId(userId)
+                .receiverId(post.getUser().getId())
+                .build();
+        notificationService.createNotification(createNotificationDTO);
 
         return postCommentDTO;
     }
@@ -103,6 +120,16 @@ public class PostCommentServiceImpl implements PostCommentService {
 
         // Send message to kafka
         kafkaProducer.sendReplyComment(String.valueOf(replyComment.getId()));
+
+        PostComment postComment = postCommentRepository.findById(postCommentId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.POST_COMMENT_NOT_FOUND));
+        CreateNotificationDTO createNotificationDTO = CreateNotificationDTO.builder()
+                .notificationType(String.valueOf(NotificationType.POST_COMMENT_REPLY))
+                .isRead(false)
+                .senderId(userId)
+                .receiverId(postComment.getUser().getId())
+                .build();
+        notificationService.createNotification(createNotificationDTO);
 
         return replyCommentDTO;
     }

@@ -9,10 +9,12 @@ import com.example.demo.dto.friendrequest.RecommendDTO;
 import com.example.demo.dto.friendrequest.SendRequestDTO;
 import com.example.demo.dto.friendrequest.UserRecommendDTO;
 import com.example.demo.dto.friendship.FriendShipCreateDTO;
+import com.example.demo.dto.notification.CreateNotificationDTO;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.dto.user.avatar.UserAvatarDTO;
 import com.example.demo.dto.user.profile.UserProfileDTO;
 import com.example.demo.enums.ErrorMessage;
+import com.example.demo.enums.NotificationType;
 import com.example.demo.mapper.friend.FriendRequestMapper;
 import com.example.demo.mapper.friend.FriendShipMapper;
 import com.example.demo.mapper.user.*;
@@ -25,6 +27,7 @@ import com.example.demo.repository.user.UserAvatarRepository;
 import com.example.demo.repository.user.UserProfileRepository;
 import com.example.demo.repository.user.UserRepository;
 import com.example.demo.service.keycloak.KeycloakService;
+import com.example.demo.service.notification.NotificationService;
 import com.example.demo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +53,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     private final FriendShipRepository friendShipRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserAvatarRepository userAvatarRepository;
+    private final NotificationService notificationService;
 
     @Override
     public List<FriendRequestDTO> getFriendRequests(int limit) {
@@ -224,6 +228,14 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         friendRequestRepository.save(friendRequest);
         log.info(userId + " sent friend request to " + sendRequestDTO.getReceiverId());
 
+        CreateNotificationDTO createNotificationDTO = CreateNotificationDTO.builder()
+                .notificationType(String.valueOf(NotificationType.FRIEND_REQUEST))
+                .isRead(false)
+                .senderId(userId)
+                .receiverId(sendRequestDTO.getReceiverId())
+                .build();
+        notificationService.createNotification(createNotificationDTO);
+
         return ResponseDTO.builder()
                 .message("Friend request was sent successfully")
                 .build();
@@ -268,6 +280,14 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
         // Delete friend request
         friendRequestRepository.delete(friendRequest.get());
+
+        CreateNotificationDTO createNotificationDTO = CreateNotificationDTO.builder()
+                .notificationType(String.valueOf(NotificationType.FRIEND_REQUEST_ACCEPTED))
+                .isRead(false)
+                .senderId(friendRequest.get().getReceiver().getId())
+                .receiverId(friendRequest.get().getSender().getId())
+                .build();
+        notificationService.createNotification(createNotificationDTO);
 
         return ResponseDTO.builder()
                 .message("Friend request was accepted successfully")

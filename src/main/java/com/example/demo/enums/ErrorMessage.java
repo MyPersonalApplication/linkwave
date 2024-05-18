@@ -28,6 +28,8 @@ public class ErrorMessage {
     public static final String POST_COMMENT_NOT_FOUND = "POST_COMMENT_NOT_FOUND";
     public static final String REPLY_COMMENT_NOT_FOUND = "REPLY_COMMENT_NOT_FOUND";
     public static final String LIKE_COMMENT_NOT_FOUND = "LIKE_COMMENT_NOT_FOUND";
+    public static final String NOTIFICATION_NOT_FOUND = "NOTIFICATION_NOT_FOUND";
+    public static final String INVALID_NOTIFICATION_TYPE = "INVALID_NOTIFICATION_TYPE";
 
     private ErrorMessage() {
     }

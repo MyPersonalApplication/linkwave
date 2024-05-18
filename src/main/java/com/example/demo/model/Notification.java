@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.enums.NotificationType;
 import com.example.demo.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,14 @@ public class Notification extends BaseModel {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "notification_type")
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
+
+    @Column
     private String message;
 
+    @Column(name = "is_read")
     private Boolean isRead;
 
     @ManyToOne

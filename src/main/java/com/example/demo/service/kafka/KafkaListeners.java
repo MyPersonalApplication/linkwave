@@ -1,12 +1,9 @@
 package com.example.demo.service.kafka;
 
 import com.example.demo.dto.message.MessageDTO;
-import com.example.demo.dto.post.PostDTO;
-import com.example.demo.dto.postcomment.PostCommentDTO;
-import com.example.demo.dto.replycomment.ReplyCommentDTO;
+import com.example.demo.dto.notification.NotificationDTO;
 import com.example.demo.service.message.MessageService;
-import com.example.demo.service.post.PostService;
-import com.example.demo.service.postcomment.PostCommentService;
+import com.example.demo.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KafkaListeners {
     private final MessageService messageService;
-    private final PostCommentService postCommentService;
+    private final NotificationService notificationService;
     private final SimpMessagingTemplate messagingTemplate;
 
     @KafkaListener(
@@ -52,5 +49,16 @@ public class KafkaListeners {
 
 //        ReplyCommentDTO replyCommentDTO = postCommentService.getReplyComment(replyCommentId);
         messagingTemplate.convertAndSend("/topic/reply-comment", replyCommentId);
+    }
+
+    @KafkaListener(
+            topics = "notification",
+            groupId = "linkwave-group"
+    )
+    public void listenNotification(UUID notificationId) {
+        System.out.println("Received notification: " + notificationId);
+
+        NotificationDTO notificationDTO = notificationService.getNotification(notificationId);
+        messagingTemplate.convertAndSend("/topic/notification", notificationDTO);
     }
 }
