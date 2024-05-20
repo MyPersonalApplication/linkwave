@@ -30,12 +30,16 @@ public class FriendShipServiceImpl implements FriendShipService {
     private final FriendShipRepository friendShipRepository;
 
     @Override
-    public List<FriendShipDTO> getFriendList() {
+    public List<FriendShipDTO> getFriendList(int limit) {
         // Get user id from token
         UUID userId = tokenHandler.getUserId();
 
         // Get friend list
         List<Friendship> friendShips = friendShipRepository.findByUserId(userId);
+
+        if (limit != -1 && friendShips.size() > limit) {
+            friendShips = friendShips.subList(0, limit);
+        }
 
         // Convert to DTO
         List<FriendShipDTO> friendShipDTOS = friendShips.stream().map(FriendShipMapper.INSTANCE::toDto).toList();

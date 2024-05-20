@@ -14,6 +14,7 @@ public interface MessageMapper {
     MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);
 
     @Mapping(target = "conversationId", source = "conversation.id")
+    @Mapping(target = "lstAttachments", source = "attachments")
     MessageDTO toDto(Message message);
 
     @Mapping(target = "id", ignore = true)

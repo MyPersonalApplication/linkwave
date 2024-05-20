@@ -33,4 +33,10 @@ public class ConversationController {
     public ResponseEntity<ConversationDTO> getConversation(@PathVariable UUID conversationId) {
         return ResponseEntity.ok(conversationService.getConversation(conversationId));
     }
+
+    @DeleteMapping("/{conversationId}")
+    public ResponseEntity<Void> deleteConversation(@PathVariable UUID conversationId) {
+        conversationService.deleteConversation(conversationId);
+        return ResponseEntity.ok().build();
+    }
 }

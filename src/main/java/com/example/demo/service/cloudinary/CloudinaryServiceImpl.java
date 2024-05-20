@@ -69,4 +69,33 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         fos.close();
         return file;
     }
+
+    @Override
+    public Map uploadFile(MultipartFile multipartFile, String folderName) throws IOException {
+        File file = convertMultiPartToFile(multipartFile);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("folder", folderName); // Specify the folder
+
+        // Determine the resource type based on the file's content type
+        String resourceType;
+        String contentType = multipartFile.getContentType();
+        if (contentType != null && contentType.startsWith("image")) {
+            resourceType = "image";
+        } else if (contentType != null && contentType.startsWith("video")) {
+            resourceType = "video";
+        } else {
+            resourceType = "raw"; // Default to raw for other file types
+        }
+        params.put("resource_type", resourceType);
+
+        Map uploadResult = cloudinary.uploader().upload(file, params);
+
+        if (!Files.deleteIfExists(file.toPath())) {
+            log.error("Failed to delete file");
+            throw new IOException("Failed to delete file: " + file.getAbsolutePath());
+        }
+        return uploadResult;
+    }
+
 }

@@ -20,8 +20,10 @@ public class FriendShipController {
     private final FriendShipService friendShipService;
 
     @GetMapping
-    public ResponseEntity<List<FriendShipDTO>> getFriendList() {
-        List<FriendShipDTO> friendShipDTO = friendShipService.getFriendList();
+    public ResponseEntity<List<FriendShipDTO>> getFriendList(
+            @RequestParam(required = false, defaultValue = "-1") int limit
+    ) {
+        List<FriendShipDTO> friendShipDTO = friendShipService.getFriendList(limit);
         return ResponseEntity.ok(friendShipDTO);
     }
 

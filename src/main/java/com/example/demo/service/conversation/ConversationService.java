@@ -11,4 +11,6 @@ public interface ConversationService {
     List<ConversationDTO> getConversations();
 
     ConversationDTO getConversation(UUID conversationId);
+
+    void deleteConversation(UUID conversationId);
 }

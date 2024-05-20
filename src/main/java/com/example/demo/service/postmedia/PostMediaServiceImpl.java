@@ -33,7 +33,7 @@ public class PostMediaServiceImpl implements PostMediaService {
     @SneakyThrows
     @Override
     public List<PostMediaDTO> createPostMedia(List<MultipartFile> multipartFiles, UUID postId) {
-        List<PostMediaDTO> postMediaDTOS = multipartFiles.stream()
+        return multipartFiles.stream()
                 .map(multipartFile -> {
                     try {
                         return processSaveImage(multipartFile, postId);
@@ -42,8 +42,6 @@ public class PostMediaServiceImpl implements PostMediaService {
                     }
                 })
                 .toList();
-
-        return postMediaDTOS;
     }
 
     private PostMediaDTO processSaveImage(MultipartFile multipartFile, UUID postId) throws IOException {

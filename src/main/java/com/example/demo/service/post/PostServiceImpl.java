@@ -12,19 +12,15 @@ import com.example.demo.dto.user.UserDTO;
 import com.example.demo.enums.ErrorMessage;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.interact.Post;
-import com.example.demo.model.user.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.postcomment.PostCommentService;
 import com.example.demo.service.postlike.PostLikeService;
 import com.example.demo.service.user.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -34,7 +30,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class PostServiceImpl implements PostService {
     private final TokenHandler tokenHandler;
     private final PostRepository postRepository;

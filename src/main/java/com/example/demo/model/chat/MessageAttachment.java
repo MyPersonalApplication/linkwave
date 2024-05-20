@@ -1,5 +1,6 @@
 package com.example.demo.model.chat;
 
+import com.example.demo.enums.MessageAttachmentFileType;
 import com.example.demo.model.BaseModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,14 +28,14 @@ public class MessageAttachment extends BaseModel {
     @Column(name = "file_url")
     private String fileUrl;
 
+    @Column(name = "file_id")
+    private String fileId;
+
     @Column(name = "file_name")
     private String fileName;
 
     @Column(name = "file_type")
-    private String fileType;
-
-    @Column(name = "file_size")
-    private Long fileSize;
+    private MessageAttachmentFileType fileType;
 
     @ManyToOne
     @JoinColumn(name = "message_id", nullable = false)

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,5 +20,6 @@ public class MessageDTO {
     private Boolean isRead;
     private UUID conversationId;
     private UserDTO sender;
+    private List<MessageAttachmentDTO> lstAttachments;
     private Date createdAt;
 }

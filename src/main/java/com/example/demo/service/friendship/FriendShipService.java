@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FriendShipService {
-    List<FriendShipDTO> getFriendList();
+    List<FriendShipDTO> getFriendList(int limit);
+
     ResponseDTO unfriend(UUID friendId);
 }

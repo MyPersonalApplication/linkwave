@@ -110,4 +110,13 @@ public class ConversationServiceImpl implements ConversationService {
 
         return conversationDTO;
     }
+
+    @Override
+    public void deleteConversation(UUID conversationId) {
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.CONVERSATION_NOT_FOUND));
+
+        // Delete conversation
+        conversationRepository.delete(conversation);
+    }
 }
