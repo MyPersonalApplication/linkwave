@@ -48,4 +48,10 @@ public class PostController {
     public ResponseEntity<PostDTO> getPost(@PathVariable UUID postId) {
         return ResponseEntity.ok(postService.getPost(postId));
     }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable UUID postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.ok().build();
+    }
 }

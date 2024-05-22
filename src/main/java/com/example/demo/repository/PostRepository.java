@@ -1,16 +1,16 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.interact.Post;
-import com.example.demo.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public interface PostRepository extends BaseRepository<Post>, JpaSpecificationExecutor<Post> {
     @Query("select p from Post p where p.archived = false order by p.createdAt desc")
     List<Post> findAllPosts();

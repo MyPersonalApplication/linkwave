@@ -1,13 +1,14 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.chat.Message;
 import com.example.demo.model.chat.Participant;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public interface ParticipantRepository extends BaseRepository<Participant>, JpaSpecificationExecutor<Participant> {
     @Query("""
                 select p

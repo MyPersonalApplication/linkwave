@@ -63,7 +63,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(UUID postId) {
-
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.POST_NOT_FOUND));
+        postRepository.delete(post);
     }
 
     @Override
